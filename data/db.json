@@ -63,9 +63,9 @@
       "expiresAt": 1781028417412
     },
     {
-      "token": "iyf5rqbcbbr58fwhj4nb0u",
+      "token": "5734kq1pndnj8591bhyboe",
       "userId": "1780423494710",
-      "expiresAt": 1781029640464
+      "expiresAt": 1781037962408
     }
   ],
   "appointments": [
@@ -528,54 +528,33 @@
     },
     {
       "userId": "1780423494710",
-      "title": "Intermediate 4-Day Gym Routine for Muscle Gain (Upper/Lower Split)",
-      "overview": "This program is tailored for intermediate lifters focused on muscle gain, utilizing a 4-day Upper/Lower split. It integrates compound movements for strength development with targeted isolation exercises to stimulate hypertrophy across all major muscle groups, promoting balanced and effective progress.",
+      "title": "Mock Intermediate Muscle gain Program",
+      "overview": "A customized 4-day routine utilizing gym exercises, tailored for intermediate level focusing on muscle gain. (GEMINI MOCK MODE)",
       "routine": [
         {
           "day": "Mon",
-          "name": "Upper Body Strength",
+          "name": "Upper Body Power",
           "exercises": [
             {
-              "name": "Barbell Bench Press",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Keep chest up, slight arch, press through your heels."
+              "name": "Dumbbell Bench Press",
+              "sets": 4,
+              "reps": "8-10 reps",
+              "rest": "90s",
+              "coachingCue": "Bring dumbbells to mid-chest level."
             },
             {
-              "name": "Barbell Bent-Over Row",
+              "name": "Dumbbell Rows",
               "sets": 3,
               "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Maintain a flat back, pull towards your lower abs."
+              "rest": "75s",
+              "coachingCue": "Pull dumbbell toward your hip."
             },
             {
-              "name": "Overhead Barbell Press",
+              "name": "Overhead Press",
               "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Brace core, press straight up, lock out elbows."
-            },
-            {
-              "name": "Lat Pulldown",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Squeeze shoulder blades, pull bar to upper chest."
-            },
-            {
-              "name": "Dumbbell Bicep Curl",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Keep elbows tucked, control both the concentric and eccentric phases."
-            },
-            {
-              "name": "Triceps Pushdown",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Isolate triceps, keep elbows fixed by your sides."
+              "reps": "8 reps",
+              "rest": "90s",
+              "coachingCue": "Lock core, press overhead without leaning back."
             }
           ]
         },
@@ -584,187 +563,124 @@
           "name": "Lower Body Strength",
           "exercises": [
             {
-              "name": "Barbell Back Squat",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Maintain upright torso, knees out, go below parallel."
+              "name": "Barbell Squats",
+              "sets": 4,
+              "reps": "8-10 reps",
+              "rest": "90s",
+              "coachingCue": "Drive knees out, keep chest upright."
             },
             {
-              "name": "Romanian Deadlift (RDL)",
+              "name": "Romanian Deadlifts",
               "sets": 3,
               "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Hinge at the hips, keep a slight bend in knees, feel stretch in hamstrings."
+              "rest": "90s",
+              "coachingCue": "Hinge at the hips, keep back straight."
             },
             {
               "name": "Leg Press",
               "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Keep lower back pressed, do not lock out knees at the top."
-            },
-            {
-              "name": "Leg Curl",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Focus on hamstring contraction, control the release."
-            },
-            {
-              "name": "Standing Calf Raise",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Full range of motion, squeeze at the top, stretch at the bottom."
-            },
-            {
-              "name": "Plank",
-              "sets": 3,
-              "reps": "45-60 sec hold",
-              "rest": "60s",
-              "coachingCue": "Keep body in a straight line, engage core, no sagging hips."
+              "reps": "10 reps",
+              "rest": "75s",
+              "coachingCue": "Control the descent, do not lock knees."
             }
           ]
         },
         {
           "day": "Wed",
-          "name": "Rest & Recovery",
+          "name": "HIIT Cardio Burn",
           "exercises": [
             {
-              "name": "Active Recovery Stretching",
-              "sets": 1,
-              "reps": "15 min",
-              "rest": "N/A",
-              "coachingCue": "Deep breathing, focus on gentle movement and holding stretches for 20-30 seconds."
+              "name": "HIIT Burpees",
+              "sets": 4,
+              "reps": "45s work",
+              "rest": "15s",
+              "coachingCue": "Explode upward on the jump."
+            },
+            {
+              "name": "Mountain Climbers",
+              "sets": 3,
+              "reps": "40s work",
+              "rest": "20s",
+              "coachingCue": "Keep hips low, drive knees fast."
+            },
+            {
+              "name": "High Knees",
+              "sets": 3,
+              "reps": "30s work",
+              "rest": "15s",
+              "coachingCue": "Pump arms, bring knees to waist level."
             }
           ]
         },
         {
           "day": "Thu",
-          "name": "Upper Body Hypertrophy",
+          "name": "Upper Body Power",
           "exercises": [
             {
-              "name": "Incline Dumbbell Press",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Focus on chest contraction, keep shoulders back and down."
+              "name": "Dumbbell Bench Press",
+              "sets": 4,
+              "reps": "8-10 reps",
+              "rest": "90s",
+              "coachingCue": "Bring dumbbells to mid-chest level."
             },
             {
-              "name": "Seated Cable Row",
+              "name": "Dumbbell Rows",
               "sets": 3,
               "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Pull with your back, squeeze shoulder blades together."
+              "rest": "75s",
+              "coachingCue": "Pull dumbbell toward your hip."
             },
             {
-              "name": "Dumbbell Lateral Raise",
+              "name": "Overhead Press",
               "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Lead with elbows, raise dumbbells to shoulder height, slight bend in elbows."
-            },
-            {
-              "name": "Face Pull",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Pull rope towards your face, externally rotate shoulders."
-            },
-            {
-              "name": "Hammer Curl",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Keep palms facing each other throughout the movement."
-            },
-            {
-              "name": "Overhead Dumbbell Extension",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Keep elbows close to head, control the eccentric phase."
+              "reps": "8 reps",
+              "rest": "90s",
+              "coachingCue": "Lock core, press overhead without leaning back."
             }
           ]
         },
         {
           "day": "Fri",
-          "name": "Lower Body Hypertrophy",
+          "name": "Rest & Mobility Recovery",
           "exercises": [
             {
-              "name": "Leg Extension",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Squeeze quadriceps at the top, control the negative."
-            },
-            {
-              "name": "Glute Bridge",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Drive through heels, squeeze glutes hard at the top, pause."
-            },
-            {
-              "name": "Goblet Squat",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Keep chest up, elbows inside knees, maintain a neutral spine."
-            },
-            {
-              "name": "Walking Lunge",
-              "sets": 3,
-              "reps": "10-12 reps per leg",
-              "rest": "60s",
-              "coachingCue": "Step forward, drop back knee towards the ground, maintain balance."
-            },
-            {
-              "name": "Seated Calf Raise",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Focus on deep stretch and peak contraction."
-            },
-            {
-              "name": "Cable Crunches",
-              "sets": 3,
-              "reps": "10-12 reps",
-              "rest": "60s",
-              "coachingCue": "Crunch with your abs, not your arms, exhale as you contract."
+              "name": "Foam Rolling / Static Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Breathe deeply, hold stretches for 30s."
             }
           ]
         },
         {
           "day": "Sat",
-          "name": "Rest & Recovery",
+          "name": "Rest & Mobility Recovery",
           "exercises": [
             {
-              "name": "Active Recovery Stretching",
+              "name": "Foam Rolling / Static Stretching",
               "sets": 1,
               "reps": "15 min",
               "rest": "N/A",
-              "coachingCue": "Deep breathing, focus on gentle movement and holding stretches for 20-30 seconds."
+              "coachingCue": "Breathe deeply, hold stretches for 30s."
             }
           ]
         },
         {
           "day": "Sun",
-          "name": "Rest & Recovery",
+          "name": "Rest & Mobility Recovery",
           "exercises": [
             {
-              "name": "Active Recovery Stretching",
+              "name": "Foam Rolling / Static Stretching",
               "sets": 1,
               "reps": "15 min",
               "rest": "N/A",
-              "coachingCue": "Deep breathing, focus on gentle movement and holding stretches for 20-30 seconds."
+              "coachingCue": "Breathe deeply, hold stretches for 30s."
             }
           ]
         }
       ],
-      "isMock": false,
-      "modelUsed": "gemini-2.5-flash"
+      "isMock": true,
+      "errorMsg": "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [401 Unauthorized] Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project. [{\"@type\":\"type.googleapis.com/google.rpc.ErrorInfo\",\"reason\":\"ACCESS_TOKEN_TYPE_UNSUPPORTED\",\"metadata\":{\"method\":\"google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent\",\"service\":\"generativelanguage.googleapis.com\"}}]"
     }
   ],
   "foodScans": [],
