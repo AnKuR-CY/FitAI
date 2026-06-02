@@ -1,0 +1,781 @@
+{
+  "users": [
+    {
+      "id": "demo-user-id",
+      "username": "demo",
+      "passwordHash": "$2b$10$gWwBpLGqMe05uElWDzpJheFDUJjcrPAtWSZRNyjxr8saKgi1AlGAW"
+    },
+    {
+      "id": "1780417791872",
+      "username": "testuser",
+      "passwordHash": "$2b$10$KUJJml6UEpVAV3pcN0LiMeWafp/VwMfe6PakFyEhTn.G2EEYV2dGu"
+    },
+    {
+      "id": "1780418013182",
+      "username": "ankur8116",
+      "passwordHash": "$2b$10$Hq2tDKzdCKSVLlqlSxbv8OqEVVmQm1dA5qwEGGPIA9Suj7SqwNOPa"
+    },
+    {
+      "id": "demo-doctor-id",
+      "username": "doctor",
+      "passwordHash": "$2b$10$PGeK9fkB9LybZiwOU0RGz.oEwZHjE3Tl0t4Ehm6lDi4deCD9vHOUa",
+      "role": "doctor",
+      "name": "Dr. Ankita Chowdhury",
+      "specialization": "Sports Physio · Injury Rehab",
+      "rating": 4.9
+    },
+    {
+      "id": "1780423494710",
+      "username": "ankur811",
+      "passwordHash": "$2b$10$OrUoyT7ZOaO.jsQesSAGz.NkuQjuK4mVGM3lEf2wD.x63paTtVaF.",
+      "role": "user"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "4ep5xbnib7quurfifvrh4i",
+      "userId": "1780417791872",
+      "expiresAt": 1781022591872
+    },
+    {
+      "token": "ki9allnyjf9hp4hjo8c3td",
+      "userId": "1780417791872",
+      "expiresAt": 1781022597841
+    },
+    {
+      "token": "kogw3zvrhcfik2xu7lyko",
+      "userId": "demo-user-id",
+      "expiresAt": 1781022604395
+    },
+    {
+      "token": "2pvv09gm29ktz4kifn4kjo",
+      "userId": "demo-user-id",
+      "expiresAt": 1781025467715
+    },
+    {
+      "token": "tyko1nizi1ryjscmz3i7x",
+      "userId": "demo-user-id",
+      "expiresAt": 1781026914763
+    },
+    {
+      "token": "ijeeuoa35xkgjqup85i7",
+      "userId": "demo-doctor-id",
+      "expiresAt": 1781028417412
+    },
+    {
+      "token": "iyf5rqbcbbr58fwhj4nb0u",
+      "userId": "1780423494710",
+      "expiresAt": 1781029640464
+    }
+  ],
+  "appointments": [
+    {
+      "id": "1",
+      "userId": "demo-user-id",
+      "therapistName": "Dr. Riya Sharma",
+      "date": "2026-06-02",
+      "time": "10:30 AM"
+    }
+  ],
+  "logs": [
+    {
+      "userId": "demo-user-id",
+      "date": "2026-05-27",
+      "weight": 79.2,
+      "bodyFat": 21.9,
+      "calories": 1820,
+      "workoutDone": true
+    },
+    {
+      "userId": "demo-user-id",
+      "date": "2026-05-28",
+      "weight": 79,
+      "bodyFat": 21.8,
+      "calories": 1950,
+      "workoutDone": true
+    },
+    {
+      "userId": "demo-user-id",
+      "date": "2026-05-29",
+      "weight": 78.7,
+      "bodyFat": 21.5,
+      "calories": 1780,
+      "workoutDone": true
+    },
+    {
+      "userId": "demo-user-id",
+      "date": "2026-05-30",
+      "weight": 78.5,
+      "bodyFat": 21.4,
+      "calories": 2100,
+      "workoutDone": false
+    },
+    {
+      "userId": "demo-user-id",
+      "date": "2026-05-31",
+      "weight": 78.4,
+      "bodyFat": 21.2,
+      "calories": 1860,
+      "workoutDone": true
+    },
+    {
+      "userId": "demo-user-id",
+      "date": "2026-06-01",
+      "weight": 78.3,
+      "bodyFat": 21.1,
+      "calories": 2240,
+      "workoutDone": true
+    },
+    {
+      "userId": "demo-user-id",
+      "date": "2026-06-02",
+      "weight": 78.2,
+      "bodyFat": 21,
+      "calories": 1710,
+      "workoutDone": false
+    },
+    {
+      "userId": "1780418013182",
+      "date": "2026-06-02",
+      "weight": 75,
+      "bodyFat": 20,
+      "calories": 3650,
+      "workoutDone": false
+    }
+  ],
+  "routines": [
+    {
+      "userId": "demo-user-id",
+      "title": "Advanced Dumbbell Muscle Hypertrophy Program",
+      "overview": "This advanced 4-day dumbbell-only program is meticulously designed for muscle hypertrophy, utilizing an upper/lower split performed twice weekly. Each session focuses on compound movements followed by targeted isolation exercises, emphasizing progressive overload and impeccable form to stimulate comprehensive muscle growth across all major muscle groups.",
+      "routine": [
+        {
+          "day": "Mon",
+          "name": "Upper Body Strength & Hypertrophy A",
+          "exercises": [
+            {
+              "name": "Dumbbell Bench Press",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep shoulders back and down, control the negative."
+            },
+            {
+              "name": "Dumbbell Bent-Over Row",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Maintain a flat back, pull elbows towards the ceiling."
+            },
+            {
+              "name": "Dumbbell Shoulder Press (Seated)",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Press upwards without locking elbows, keep core tight."
+            },
+            {
+              "name": "Dumbbell Incline Curl",
+              "sets": 3,
+              "reps": "10-15 reps",
+              "rest": "60s",
+              "coachingCue": "Allow a full stretch at the bottom, squeeze biceps at the top."
+            },
+            {
+              "name": "Dumbbell Overhead Triceps Extension",
+              "sets": 3,
+              "reps": "10-15 reps",
+              "rest": "60s",
+              "coachingCue": "Keep elbows close to head, fully extend without locking."
+            },
+            {
+              "name": "Dumbbell Lateral Raises",
+              "sets": 3,
+              "reps": "12-15 reps",
+              "rest": "60s",
+              "coachingCue": "Lead with elbows, slight bend in arms, stop at shoulder height."
+            }
+          ]
+        },
+        {
+          "day": "Tue",
+          "name": "Lower Body Strength & Hypertrophy A",
+          "exercises": [
+            {
+              "name": "Dumbbell Goblet Squat",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep chest up, push knees out, go as deep as comfortable."
+            },
+            {
+              "name": "Dumbbell Romanian Deadlift (RDL)",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Hinge at hips, slight knee bend, feel stretch in hamstrings."
+            },
+            {
+              "name": "Dumbbell Walking Lunges",
+              "sets": 3,
+              "reps": "10-12 reps per leg",
+              "rest": "60s",
+              "coachingCue": "Maintain balance, ensure front knee doesn't go past toes."
+            },
+            {
+              "name": "Dumbbell Calf Raises (Standing)",
+              "sets": 3,
+              "reps": "15-20 reps",
+              "rest": "60s",
+              "coachingCue": "Full range of motion, squeeze at the top, control the negative."
+            },
+            {
+              "name": "Plank (Bodyweight)",
+              "sets": 3,
+              "reps": "30-60s hold",
+              "rest": "60s",
+              "coachingCue": "Keep body in a straight line, engage core and glutes."
+            }
+          ]
+        },
+        {
+          "day": "Wed",
+          "name": "Rest & Recovery",
+          "exercises": [
+            {
+              "name": "Active Recovery Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Focus on deep breathing and gentle movements, targeting major muscle groups."
+            }
+          ]
+        },
+        {
+          "day": "Thu",
+          "name": "Upper Body Strength & Hypertrophy B",
+          "exercises": [
+            {
+              "name": "Dumbbell Incline Press",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Angle bench to 30-45 degrees, focus on upper chest contraction."
+            },
+            {
+              "name": "Dumbbell Renegade Row",
+              "sets": 3,
+              "reps": "8-12 reps per arm",
+              "rest": "60s",
+              "coachingCue": "Keep hips stable and parallel to the floor, minimize torso rotation."
+            },
+            {
+              "name": "Dumbbell Arnold Press",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Rotate palms inward at the bottom, outward at the top, controlled movement."
+            },
+            {
+              "name": "Dumbbell Hammer Curls",
+              "sets": 3,
+              "reps": "10-15 reps",
+              "rest": "60s",
+              "coachingCue": "Keep elbows tucked in, focus on brachialis and forearm engagement."
+            },
+            {
+              "name": "Dumbbell Lying Triceps Extension (Skullcrushers)",
+              "sets": 3,
+              "reps": "10-15 reps",
+              "rest": "60s",
+              "coachingCue": "Keep elbows fixed, extend arms fully without locking."
+            },
+            {
+              "name": "Dumbbell Reverse Flyes",
+              "sets": 3,
+              "reps": "12-15 reps",
+              "rest": "60s",
+              "coachingCue": "Bend forward at hips, squeeze shoulder blades together, focus on rear delts."
+            }
+          ]
+        },
+        {
+          "day": "Fri",
+          "name": "Lower Body Strength & Hypertrophy B",
+          "exercises": [
+            {
+              "name": "Dumbbell Front Squat",
+              "sets": 3,
+              "reps": "8-12 reps",
+              "rest": "60s",
+              "coachingCue": "Hold dumbbells at shoulders, keep torso upright, drive through heels."
+            },
+            {
+              "name": "Single-Leg Dumbbell Romanian Deadlift",
+              "sets": 3,
+              "reps": "8-10 reps per leg",
+              "rest": "60s",
+              "coachingCue": "Maintain a flat back, extend free leg straight back for balance, control the descent."
+            },
+            {
+              "name": "Dumbbell Step-Ups",
+              "sets": 3,
+              "reps": "10-12 reps per leg",
+              "rest": "60s",
+              "coachingCue": "Use a sturdy box/bench, drive through the heel of the stepping foot."
+            },
+            {
+              "name": "Dumbbell Glute Bridge",
+              "sets": 3,
+              "reps": "12-15 reps",
+              "rest": "60s",
+              "coachingCue": "Place dumbbell across hips, drive hips up, squeeze glutes at the top."
+            },
+            {
+              "name": "Dumbbell Farmer's Walk",
+              "sets": 3,
+              "reps": "45-60s duration",
+              "rest": "60s",
+              "coachingCue": "Maintain tall posture, shoulders back, engage core, walk with purpose."
+            }
+          ]
+        },
+        {
+          "day": "Sat",
+          "name": "Rest & Recovery",
+          "exercises": [
+            {
+              "name": "Active Recovery Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Focus on deep breathing and gentle movements, targeting major muscle groups."
+            }
+          ]
+        },
+        {
+          "day": "Sun",
+          "name": "Rest & Recovery",
+          "exercises": [
+            {
+              "name": "Active Recovery Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Focus on deep breathing and gentle movements, targeting major muscle groups."
+            }
+          ]
+        }
+      ],
+      "isMock": false,
+      "modelUsed": "gemini-2.5-flash"
+    },
+    {
+      "userId": "1780418013182",
+      "title": "Mock Intermediate Muscle gain Program",
+      "overview": "A customized 4-day routine utilizing gym exercises, tailored for intermediate level focusing on muscle gain. (GEMINI MOCK MODE)",
+      "routine": [
+        {
+          "day": "Mon",
+          "name": "Upper Body Power",
+          "exercises": [
+            {
+              "name": "Dumbbell Bench Press",
+              "sets": 4,
+              "reps": "8-10 reps",
+              "rest": "90s",
+              "coachingCue": "Bring dumbbells to mid-chest level."
+            },
+            {
+              "name": "Dumbbell Rows",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "75s",
+              "coachingCue": "Pull dumbbell toward your hip."
+            },
+            {
+              "name": "Overhead Press",
+              "sets": 3,
+              "reps": "8 reps",
+              "rest": "90s",
+              "coachingCue": "Lock core, press overhead without leaning back."
+            }
+          ]
+        },
+        {
+          "day": "Tue",
+          "name": "Lower Body Strength",
+          "exercises": [
+            {
+              "name": "Barbell Squats",
+              "sets": 4,
+              "reps": "8-10 reps",
+              "rest": "90s",
+              "coachingCue": "Drive knees out, keep chest upright."
+            },
+            {
+              "name": "Romanian Deadlifts",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "90s",
+              "coachingCue": "Hinge at the hips, keep back straight."
+            },
+            {
+              "name": "Leg Press",
+              "sets": 3,
+              "reps": "10 reps",
+              "rest": "75s",
+              "coachingCue": "Control the descent, do not lock knees."
+            }
+          ]
+        },
+        {
+          "day": "Wed",
+          "name": "HIIT Cardio Burn",
+          "exercises": [
+            {
+              "name": "HIIT Burpees",
+              "sets": 4,
+              "reps": "45s work",
+              "rest": "15s",
+              "coachingCue": "Explode upward on the jump."
+            },
+            {
+              "name": "Mountain Climbers",
+              "sets": 3,
+              "reps": "40s work",
+              "rest": "20s",
+              "coachingCue": "Keep hips low, drive knees fast."
+            },
+            {
+              "name": "High Knees",
+              "sets": 3,
+              "reps": "30s work",
+              "rest": "15s",
+              "coachingCue": "Pump arms, bring knees to waist level."
+            }
+          ]
+        },
+        {
+          "day": "Thu",
+          "name": "Upper Body Power",
+          "exercises": [
+            {
+              "name": "Dumbbell Bench Press",
+              "sets": 4,
+              "reps": "8-10 reps",
+              "rest": "90s",
+              "coachingCue": "Bring dumbbells to mid-chest level."
+            },
+            {
+              "name": "Dumbbell Rows",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "75s",
+              "coachingCue": "Pull dumbbell toward your hip."
+            },
+            {
+              "name": "Overhead Press",
+              "sets": 3,
+              "reps": "8 reps",
+              "rest": "90s",
+              "coachingCue": "Lock core, press overhead without leaning back."
+            }
+          ]
+        },
+        {
+          "day": "Fri",
+          "name": "Rest & Mobility Recovery",
+          "exercises": [
+            {
+              "name": "Foam Rolling / Static Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Breathe deeply, hold stretches for 30s."
+            }
+          ]
+        },
+        {
+          "day": "Sat",
+          "name": "Rest & Mobility Recovery",
+          "exercises": [
+            {
+              "name": "Foam Rolling / Static Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Breathe deeply, hold stretches for 30s."
+            }
+          ]
+        },
+        {
+          "day": "Sun",
+          "name": "Rest & Mobility Recovery",
+          "exercises": [
+            {
+              "name": "Foam Rolling / Static Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Breathe deeply, hold stretches for 30s."
+            }
+          ]
+        }
+      ],
+      "isMock": true,
+      "errorMsg": "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods."
+    },
+    {
+      "userId": "1780423494710",
+      "title": "Intermediate 4-Day Gym Routine for Muscle Gain (Upper/Lower Split)",
+      "overview": "This program is tailored for intermediate lifters focused on muscle gain, utilizing a 4-day Upper/Lower split. It integrates compound movements for strength development with targeted isolation exercises to stimulate hypertrophy across all major muscle groups, promoting balanced and effective progress.",
+      "routine": [
+        {
+          "day": "Mon",
+          "name": "Upper Body Strength",
+          "exercises": [
+            {
+              "name": "Barbell Bench Press",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep chest up, slight arch, press through your heels."
+            },
+            {
+              "name": "Barbell Bent-Over Row",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Maintain a flat back, pull towards your lower abs."
+            },
+            {
+              "name": "Overhead Barbell Press",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Brace core, press straight up, lock out elbows."
+            },
+            {
+              "name": "Lat Pulldown",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Squeeze shoulder blades, pull bar to upper chest."
+            },
+            {
+              "name": "Dumbbell Bicep Curl",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep elbows tucked, control both the concentric and eccentric phases."
+            },
+            {
+              "name": "Triceps Pushdown",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Isolate triceps, keep elbows fixed by your sides."
+            }
+          ]
+        },
+        {
+          "day": "Tue",
+          "name": "Lower Body Strength",
+          "exercises": [
+            {
+              "name": "Barbell Back Squat",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Maintain upright torso, knees out, go below parallel."
+            },
+            {
+              "name": "Romanian Deadlift (RDL)",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Hinge at the hips, keep a slight bend in knees, feel stretch in hamstrings."
+            },
+            {
+              "name": "Leg Press",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep lower back pressed, do not lock out knees at the top."
+            },
+            {
+              "name": "Leg Curl",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Focus on hamstring contraction, control the release."
+            },
+            {
+              "name": "Standing Calf Raise",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Full range of motion, squeeze at the top, stretch at the bottom."
+            },
+            {
+              "name": "Plank",
+              "sets": 3,
+              "reps": "45-60 sec hold",
+              "rest": "60s",
+              "coachingCue": "Keep body in a straight line, engage core, no sagging hips."
+            }
+          ]
+        },
+        {
+          "day": "Wed",
+          "name": "Rest & Recovery",
+          "exercises": [
+            {
+              "name": "Active Recovery Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Deep breathing, focus on gentle movement and holding stretches for 20-30 seconds."
+            }
+          ]
+        },
+        {
+          "day": "Thu",
+          "name": "Upper Body Hypertrophy",
+          "exercises": [
+            {
+              "name": "Incline Dumbbell Press",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Focus on chest contraction, keep shoulders back and down."
+            },
+            {
+              "name": "Seated Cable Row",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Pull with your back, squeeze shoulder blades together."
+            },
+            {
+              "name": "Dumbbell Lateral Raise",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Lead with elbows, raise dumbbells to shoulder height, slight bend in elbows."
+            },
+            {
+              "name": "Face Pull",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Pull rope towards your face, externally rotate shoulders."
+            },
+            {
+              "name": "Hammer Curl",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep palms facing each other throughout the movement."
+            },
+            {
+              "name": "Overhead Dumbbell Extension",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep elbows close to head, control the eccentric phase."
+            }
+          ]
+        },
+        {
+          "day": "Fri",
+          "name": "Lower Body Hypertrophy",
+          "exercises": [
+            {
+              "name": "Leg Extension",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Squeeze quadriceps at the top, control the negative."
+            },
+            {
+              "name": "Glute Bridge",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Drive through heels, squeeze glutes hard at the top, pause."
+            },
+            {
+              "name": "Goblet Squat",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Keep chest up, elbows inside knees, maintain a neutral spine."
+            },
+            {
+              "name": "Walking Lunge",
+              "sets": 3,
+              "reps": "10-12 reps per leg",
+              "rest": "60s",
+              "coachingCue": "Step forward, drop back knee towards the ground, maintain balance."
+            },
+            {
+              "name": "Seated Calf Raise",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Focus on deep stretch and peak contraction."
+            },
+            {
+              "name": "Cable Crunches",
+              "sets": 3,
+              "reps": "10-12 reps",
+              "rest": "60s",
+              "coachingCue": "Crunch with your abs, not your arms, exhale as you contract."
+            }
+          ]
+        },
+        {
+          "day": "Sat",
+          "name": "Rest & Recovery",
+          "exercises": [
+            {
+              "name": "Active Recovery Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Deep breathing, focus on gentle movement and holding stretches for 20-30 seconds."
+            }
+          ]
+        },
+        {
+          "day": "Sun",
+          "name": "Rest & Recovery",
+          "exercises": [
+            {
+              "name": "Active Recovery Stretching",
+              "sets": 1,
+              "reps": "15 min",
+              "rest": "N/A",
+              "coachingCue": "Deep breathing, focus on gentle movement and holding stretches for 20-30 seconds."
+            }
+          ]
+        }
+      ],
+      "isMock": false,
+      "modelUsed": "gemini-2.5-flash"
+    }
+  ],
+  "foodScans": [],
+  "workoutHistory": [
+    {
+      "id": "1780422114783",
+      "userId": "demo-user-id",
+      "date": "2026-06-02",
+      "timestamp": "2026-06-02T17:41:54.784Z",
+      "workoutName": "Upper Body Power Test",
+      "exercisesCount": 5
+    }
+  ]
+}

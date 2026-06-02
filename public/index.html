@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitAI — Train Smarter, Live Better</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap"
+    rel="stylesheet">
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Custom JavaScript -->
+  <script src="js/app.js" defer></script>
+</head>
+
+<body class="fit-root">
+
+  <!-- LOCAL FILE WARNING BANNER -->
+  <div id="file-origin-warning" class="file-warning-banner hidden">
+    <div class="warning-banner-content">
+      <i class="ti ti-alert-triangle-filled"></i>
+      <span><strong>Warning:</strong> You are opening this page via file:// protocol. Backend database, booking, and
+        Gemini AI features require visiting <strong><a href="http://localhost:3000" target="_blank"
+            style="color: inherit; text-decoration: underline;">http://localhost:3000</a></strong>.</span>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <div class="nav-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Fit<span>AI</span></div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#routine">Routine</a>
+      <a href="#nutrition">Nutrition</a>
+      <a href="#physio">Physio</a>
+      <a href="#dashboard">Dashboard</a>
+    </div>
+    <div class="nav-actions" style="display: flex; align-items: center; gap: 12px;">
+      <span id="user-profile-badge" class="user-badge hidden">
+        <i class="ti ti-user" style="font-size:12px;"></i> <span id="user-display-name">Username</span>
+      </span>
+      <button class="nav-cta" onclick="openLogModal()">Log Daily Activity</button>
+      <button id="logout-nav-btn" class="btn-logout hidden" onclick="handleLogout()"><i
+          class="ti ti-logout"></i></button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="ti ti-cpu" aria-hidden="true"></i> AI-Powered Fitness
+        </div>
+        <h1 class="hero-title">Train Smarter.<br><span class="accent">Live Better.</span></h1>
+        <p class="hero-sub">Your all-in-one AI fitness companion — personalized routines, real-time tracking, calorie
+          scanning, and expert physio care in one platform.</p>
+        <div class="hero-btns">
+          <button class="btn-primary"
+            onclick="document.getElementById('routine').scrollIntoView({behavior: 'smooth'})">Build Routine Now</button>
+          <button class="btn-ghost" onclick="openDemoModal()"><i class="ti ti-player-play" style="font-size:13px;"
+              aria-hidden="true"></i> Watch Demo</button>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-visual-header">
+          <span class="hero-visual-title">Live Exercise Tracker</span>
+          <span class="live-badge"><span class="live-dot"></span> Live</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-card">
+            <div class="metric-label">Heart Rate</div>
+            <div id="hero-hr" class="metric-val" style="color:#ef4444;">142</div>
+            <div class="metric-unit">bpm</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Calories</div>
+            <div id="hero-cal" class="metric-val" style="color:#b8ff57;">387</div>
+            <div class="metric-unit">kcal</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Duration</div>
+            <div id="hero-dur" class="metric-val" style="color:#57d4ff;">34</div>
+            <div class="metric-unit">min</div>
+          </div>
+        </div>
+        <div class="chart-mini-card">
+          <div class="chart-mini-label">Heart Rate — Last 10 min</div>
+          <svg viewBox="0 0 280 60" width="100%" style="display:block;">
+            <polyline points="0,45 28,40 56,42 84,30 112,22 140,35 168,20 196,28 224,15 252,25 280,18" fill="none"
+              stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <polyline points="0,45 28,40 56,42 84,30 112,22 140,35 168,20 196,28 224,15 252,25 280,18 280,60 0,60"
+              fill="url(#rgrad)" opacity="0.15" />
+            <defs>
+              <linearGradient id="rgrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ef4444" />
+                <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES BRIEF SECTION -->
+  <section id="features" class="section">
+    <div class="section-label">Core Features</div>
+    <h2 class="section-title">Everything you need<br>to <span class="accent">crush your goals</span></h2>
+    <p class="section-sub">Powerful AI tools built for serious athletes and beginners alike — all in one clean
+      dashboard.</p>
+  </section>
+
+  <!-- AI ROUTINE GENERATOR -->
+  <section id="routine" class="section" style="padding-top: 0;">
+    <div class="feat-card wide-layout">
+      <div class="feat-info">
+        <div class="feat-icon green"><i class="ti ti-brain" aria-hidden="true"></i></div>
+        <div class="feat-tag">AI Powered</div>
+        <div class="feat-name">AI Fitness Routine Generator</div>
+        <p class="feat-desc">Configure your targets and let build a customized weekly schedule. Complete with
+          detailed sets, reps, rest periods, and tailored coaching tips.</p>
+
+        <!-- Interactive Form -->
+        <form id="routine-form" class="routine-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="goal-select">Fitness Goal</label>
+              <select id="goal-select" required>
+                <option value="fat loss">Fat Loss / Definition</option>
+                <option value="muscle gain" selected>Muscle Gain / Hypertrophy</option>
+                <option value="endurance">Endurance &amp; Stamina</option>
+                <option value="general fitness">General Fitness &amp; Health</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="days-select">Workouts Per Week</label>
+              <select id="days-select" required>
+                <option value="3">3 Days (Full Body Split)</option>
+                <option value="4" selected>4 Days (Upper/Lower Split)</option>
+                <option value="5">5 Days (Push/Pull/Legs Split)</option>
+                <option value="6">6 Days (Advanced Arnold Split)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="level-select">Fitness Level</label>
+              <select id="level-select" required>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate" selected>Intermediate</option>
+                <option value="advanced">Advanced (High Intensity)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="equipment-select">Equipment Available</label>
+              <select id="equipment-select" required>
+                <option value="gym" selected>Full Gym / Barbells &amp; Machines</option>
+                <option value="home/dumbbells">Dumbbells &amp; Bands</option>
+                <option value="bodyweight">Bodyweight Only (Calisthenics)</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" id="generate-routine-btn" class="btn-primary w-full mt-4">
+            <span class="btn-text">Generate My AI Routine</span>
+            <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Live Generated Content Area -->
+      <div class="routine-preview-card">
+        <div class="preview-header">
+          <div id="routine-title" class="routine-preview-title">This week's plan</div>
+          <span id="api-status-badge" class="api-badge status-default">AI READY</span>
+        </div>
+
+        <p id="routine-overview" class="routine-preview-desc">Fill out the generator details on the left to customize
+          this schedule using AI intelligence.</p>
+
+        <div id="routine-list" class="routine-days-container">
+          <!-- Default Mock Days -->
+          <div class="routine-day-row">
+            <div class="day-meta">
+              <span class="day-name">Mon</span>
+              <span class="day-workout-title">Upper Body Push</span>
+            </div>
+            <div class="day-action accent">✓ Completed</div>
+          </div>
+          <div class="routine-day-row">
+            <div class="day-meta">
+              <span class="day-name">Tue</span>
+              <span class="day-workout-title">HIIT Cardio 30min</span>
+            </div>
+            <div class="day-action accent">✓ Completed</div>
+          </div>
+          <div class="routine-day-row active-day">
+            <div class="day-meta">
+              <span class="day-name">Wed</span>
+              <span class="day-workout-title">Lower Body + Core</span>
+            </div>
+            <div class="day-action highlight">Today</div>
+          </div>
+          <div class="routine-day-row disabled-day">
+            <div class="day-meta">
+              <span class="day-name">Thu</span>
+              <span class="day-workout-title">Rest &amp; Mobility</span>
+            </div>
+            <div class="day-action text-muted">Rest</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOD CALORIE SCANNER -->
+  <section id="nutrition" class="section" style="padding-top: 0;">
+    <div class="features-grid">
+
+      <!-- Food Scanner Card -->
+      <div class="feat-card scanner-layout">
+        <div class="feat-info">
+          <div class="feat-icon orange"><i class="ti ti-camera" aria-hidden="true"></i></div>
+          <div class="feat-tag">Scan &amp; Detect</div>
+          <div class="feat-name">Food Photo Calorie Scanner</div>
+          <p class="feat-desc">Snap or upload a photo of any meal. Our vision AI identifies the ingredients and
+            instantly calculates precise macros and calories.</p>
+
+          <!-- Upload Drag Drop Zone -->
+          <div id="drop-zone" class="upload-dropzone mt-4">
+            <i class="ti ti-cloud-upload upload-icon"></i>
+            <p class="upload-text">Drag &amp; drop meal image or <span>browse files</span></p>
+            <p class="upload-subtext">Supports PNG, JPG (Max 5MB)</p>
+            <input type="file" id="food-image-input" accept="image/*" class="hidden">
+          </div>
+
+          <!-- Preview image and button -->
+          <div id="upload-preview-container" class="upload-preview hidden mt-4">
+            <img id="upload-preview-img" src="" alt="Food Preview">
+            <div class="preview-actions">
+              <button id="cancel-upload-btn" class="btn-ghost-small">Remove</button>
+              <button id="scan-food-btn" class="btn-primary-small">
+                <span class="btn-text">Analyze Plate</span>
+                <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Meal Scan History Panel -->
+          <div class="history-section mt-6">
+            <div class="history-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="history-title"><i class="ti ti-history"></i> Recent Plate Scans</span>
+              <span class="history-count" id="scan-history-count"
+                style="font-size:10px; color:var(--text-muted); font-weight:700;">0 meals</span>
+            </div>
+            <div class="history-list scrollable-history" id="scan-history-list">
+              <div class="history-placeholder">No meal scans yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scanner Result Panel -->
+        <div class="food-scan-mock" id="scanner-result-panel">
+          <div class="scan-header" id="scan-default-header">
+            <div class="scan-img-placeholder">🍝</div>
+            <div>
+              <div class="scan-result-title">Chicken Biriyani</div>
+              <div class="scan-result-sub" style="color:#b8ff57; font-size:12px; margin-top:2px;">486 kcal detected
+              </div>
+              <div class="scan-result-sub">Serving: 1 Plate (~750g)</div>
+            </div>
+          </div>
+
+          <div class="macro-list" id="scan-macros">
+            <div class="macro-bar-row">
+              <div class="macro-label-row"><span>Protein</span><span id="protein-val"
+                  style="color:#e8eaf2; font-weight:500;">70-100g</span></div>
+              <div class="macro-bar">
+                <div id="protein-bar" class="macro-fill" style="width:62%; background:#b8ff57;"></div>
+              </div>
+            </div>
+            <div class="macro-bar-row">
+              <div class="macro-label-row"><span>Carbs</span><span id="carbs-val"
+                  style="color:#e8eaf2; font-weight:500;">200-280g</span></div>
+              <div class="macro-bar">
+                <div id="carbs-bar" class="macro-fill" style="width:78%; background:#57d4ff;"></div>
+              </div>
+            </div>
+            <div class="macro-bar-row">
+              <div class="macro-label-row"><span>Fat</span><span id="fat-val"
+                  style="color:#e8eaf2; font-weight:500;">60-100g</span></div>
+              <div class="macro-bar">
+                <div id="fat-bar" class="macro-fill" style="width:32%; background:#fb923c;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="scan-extra-info mt-4" id="scan-ingredients-panel">
+            <div class="ingredients-label">Detected Ingredients</div>
+            <div id="ingredients-list" class="tag-list">
+              <span class="ingredient-tag">chicken</span>
+              <span class="ingredient-tag">basmati rice</span>
+              <span class="ingredient-tag">yoghurt</span>
+              <span class="ingredient-tag">caramelised Onion</span>
+              <span class="ingredient-tag">potato</span>
+              <span class="ingredient-tag">Colour</span>
+
+
+            </div>
+            <p id="nutrition-advice" class="nutrition-advice-text mt-3">High-Fat and High-Calorie Meal.</p>
+            <button id="add-to-dashboard-btn" class="btn-dashboard-add mt-3 w-full hidden">Add Calories to
+              Dashboard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Exercise Tracker - WIDE -->
+      <div class="feat-card wide">
+        <div class="tracker-desc-col">
+          <div class="feat-icon blue"><i class="ti ti-activity" aria-hidden="true"></i></div>
+          <div class="feat-tag">Real-Time</div>
+          <div class="feat-name">Live Exercise Tracker</div>
+          <p class="feat-desc">Track your workout in real time with rep counting, set timers, heart rate monitoring, and
+            live calorie burn. AI coaching cues keep your form on point throughout every movement.</p>
+          <div class="tracker-features-grid mt-4">
+            <div class="tracker-badge"><i class="ti ti-heartbeat" style="color:#ef4444;" aria-hidden="true"></i> Heart
+              rate zones</div>
+            <div class="tracker-badge"><i class="ti ti-clock" style="color:#57d4ff;" aria-hidden="true"></i> Set timers
+              &amp; rest</div>
+            <div class="tracker-badge"><i class="ti ti-flame" style="color:#fb923c;" aria-hidden="true"></i> Live
+              calorie burn</div>
+            <div class="tracker-badge"><i class="ti ti-robot" style="color:#b8ff57;" aria-hidden="true"></i> AI form
+              coaching</div>
+          </div>
+
+          <!-- Workout History Panel -->
+          <div class="history-section mt-6">
+            <div class="history-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="history-title"><i class="ti ti-history"></i> Session History Log</span>
+              <span class="history-count" id="workout-history-count"
+                style="font-size:10px; color:var(--text-muted); font-weight:700;">0 completed</span>
+            </div>
+            <div class="history-list scrollable-history" id="workout-history-list">
+              <div class="history-placeholder">No logged sessions.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-mock" id="live-tracker-panel">
+          <!-- Placeholder Screen -->
+          <div class="tracker-placeholder">
+            <div class="tracker-placeholder-icon">🏋️‍♂️</div>
+            <div class="tracker-placeholder-title">Ready to Train?</div>
+            <p class="tracker-placeholder-desc">Expand a workout day in your routine below and click <strong>"Start Live
+                Workout"</strong> to load exercises into this real-time tracker.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHYSIO CLINIC -->
+  <section id="physio" class="physio-section">
+    <div class="physio-inner">
+      <div class="physio-left">
+        <div class="section-label">Physio Clinic</div>
+        <h2 class="section-title">Book Expert<br><span class="accent2">Physio Care</span></h2>
+        <p class="physio-desc">Connect with certified physiotherapists for injury recovery, mobility work, and
+          performance optimization — in-person or virtual sessions.</p>
+
+        <div class="physio-features">
+          <div class="physio-feat-item">
+            <div class="physio-feat-icon"><i class="ti ti-calendar" style="color:#57d4ff; font-size:16px;"
+                aria-hidden="true"></i></div>
+            <span>Same-day &amp; advance booking</span>
+          </div>
+          <div class="physio-feat-item">
+            <div class="physio-feat-icon"><i class="ti ti-video" style="color:#b8ff57; font-size:16px;"
+                aria-hidden="true"></i></div>
+            <span>In-person or video sessions</span>
+          </div>
+          <div class="physio-feat-item">
+            <div class="physio-feat-icon"><i class="ti ti-file-certificate" style="color:#a78bfa; font-size:16px;"
+                aria-hidden="true"></i></div>
+            <span>Verified &amp; certified therapists</span>
+          </div>
+        </div>
+
+        <!-- Interactive Appointments Panel -->
+        <div class="appointments-panel mt-6">
+          <div class="appointments-header">
+            <h3>My Scheduled Sessions</h3>
+          </div>
+          <div id="appointments-list-container" class="appointments-list">
+            <div class="no-appointments">No upcoming sessions. Book a therapist on the right!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="physio-right">
+        <div class="physio-right-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Available Therapists</span>
+          <button onclick="fetchAvailableTherapists()" class="btn-ghost-small" style="font-size: 11px; padding: 4px 8px; border: 0.5px solid var(--border-light); border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; color: var(--accent-blue);">
+            <i class="ti ti-refresh"></i> Refresh
+          </button>
+        </div>
+        <div class="physio-cards" id="available-therapists-list">
+          <!-- Dynamically populated from /api/physio/available-slots -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANALYTICS DASHBOARD -->
+  <section id="dashboard" class="dash-section">
+    <div class="section-label">Analytics Dashboard</div>
+    <div class="dash-section-header">
+      <div>
+        <h2 class="section-title">Track Your Progress</h2>
+        <p class="section-sub" style="margin-bottom:0;">See your weight logs and calorie trends over time with
+          beautiful, interactive charts.</p>
+      </div>
+      <button class="btn-primary" onclick="openLogModal()"><i class="ti ti-plus"></i> Log Today's Data</button>
+    </div>
+
+    <div class="dash-container">
+      <div class="dash-topbar">
+        <span class="dash-topbar-title">My Progress — Live Health Logs</span>
+        <div class="dash-tabs">
+          <button class="dash-tab active" id="tab-week" onclick="setDashboardTimeframe('week')">Week</button>
+          <button class="dash-tab" id="tab-month" onclick="setDashboardTimeframe('month')">Month</button>
+        </div>
+      </div>
+
+      <div class="dash-body">
+        <div class="dash-stats">
+          <!-- Fat Lost Stat -->
+          <div class="dash-stat">
+            <div class="dash-stat-label">Total Weight Lost</div>
+            <div class="dash-stat-val" style="color:#b8ff57;"><span id="stat-fat-lost">0.0</span><span
+                class="stat-unit">kg</span></div>
+            <div class="dash-stat-change pos"><i class="ti ti-trending-down" aria-hidden="true"></i> Overall Trend</div>
+          </div>
+
+          <!-- Avg Daily Calories -->
+          <div class="dash-stat">
+            <div class="dash-stat-label">Avg Daily Calories</div>
+            <div class="dash-stat-val" style="color:#57d4ff;"><span id="stat-avg-calories">0</span><span
+                class="stat-unit">kcal</span></div>
+            <div class="dash-stat-change pos"><i class="ti ti-trending-down" aria-hidden="true"></i> Under 2000 Goal
+            </div>
+          </div>
+
+          <!-- Workouts Done -->
+          <div class="dash-stat">
+            <div class="dash-stat-label">Workouts Done</div>
+            <div class="dash-stat-val"><span id="stat-workouts-done">0</span><span class="stat-unit"
+                id="stat-total-workouts"> / 0</span></div>
+            <div class="dash-stat-change pos" id="stat-workout-completion">0% Completion</div>
+          </div>
+
+          <!-- Streak -->
+          <div class="dash-stat">
+            <div class="dash-stat-label">Workout Streak</div>
+            <div class="dash-stat-val" style="color:#fb923c;"><span id="stat-streak">0</span><span
+                class="stat-unit">days</span></div>
+            <div class="dash-stat-change pos">Active Habit</div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <!-- Fat Loss Chart -->
+          <div class="chart-box">
+            <div class="chart-box-header">
+              <span class="chart-box-title">Weight &amp; Fat Percentage Trend</span>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#b8ff57;"></div> Body Fat %
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#57d4ff;"></div> Weight (kg)
+                </div>
+              </div>
+            </div>
+            <div class="chart-canvas-container">
+              <canvas id="fatChart" role="img" aria-label="Line chart showing weight and fat loss trend.">Weight loss
+                logs loaded dynamically.</canvas>
+            </div>
+          </div>
+
+          <!-- Calorie Chart -->
+          <div class="chart-box">
+            <div class="chart-box-header">
+              <span class="chart-box-title">Daily Calories Intake</span>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#fb923c; border-radius:50%;"></div> kcal
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot"
+                    style="background:rgba(255,255,255,0.15); border:1px dashed rgba(255,255,255,0.3); border-radius:0;">
+                  </div> Goal
+                </div>
+              </div>
+            </div>
+            <div class="chart-canvas-container">
+              <canvas id="calChart" role="img" aria-label="Bar chart showing daily calorie intake.">Daily calories logs
+                loaded dynamically.</canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCTOR DASHBOARD -->
+  <section id="doctor-dashboard" class="doctor-dashboard-section hidden">
+    <div class="section-label">Physiotherapist Doctor Portal</div>
+    <div class="doctor-dash-header">
+      <div>
+        <h2 class="section-title">Welcome, <span class="accent2" id="doctor-title-name">Doctor</span></h2>
+        <p class="section-sub" id="doctor-spec-label">Specialist Portal</p>
+      </div>
+    </div>
+
+    <div class="doctor-dash-container">
+      <div class="doctor-dash-grid">
+        <!-- Left Column: Manage Slots -->
+        <div class="doctor-panel">
+          <div class="panel-header">
+            <h3><i class="ti ti-calendar-plus"></i> Open New Availability Slot</h3>
+          </div>
+          <form id="add-slot-form" class="slot-form">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="slot-date-select">Choose Date</label>
+                <select id="slot-date-select" required class="form-control-input">
+                  <option value="Today">Today</option>
+                  <option value="Tomorrow">Tomorrow</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="slot-time-input">Time (e.g. 10:30 AM)</label>
+                <input type="text" id="slot-time-input" placeholder="e.g. 3:00 PM" required class="form-control-input">
+              </div>
+            </div>
+            <button type="submit" class="btn-primary w-full mt-4">
+              <span class="btn-text">Open Slot</span>
+              <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
+            </button>
+          </form>
+
+          <div class="slots-list-section mt-6">
+            <h4>My Open Slots</h4>
+            <div class="slots-list-container" id="doctor-slots-list">
+              <div class="slots-placeholder">No open availability slots.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Patient Sessions -->
+        <div class="doctor-panel">
+          <div class="panel-header">
+            <h3><i class="ti ti-calendar-event"></i> Scheduled Patient Sessions</h3>
+          </div>
+          <div class="sessions-list-container" id="doctor-bookings-list">
+            <div class="sessions-placeholder">No booked appointments.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer-section">
+    <div class="footer-inner">
+      <div class="footer-logo">Fit<span>AI</span></div>
+      <div class="footer-links">
+        <span>Privacy</span>
+        <span>Terms</span>
+        <span>Support</span>
+        <span>Blog</span>
+      </div>
+      <div class="footer-copy">© 2026 FitAI. All rights reserved. Built By Ankur Chowdhury.</div>
+    </div>
+  </footer>
+
+  <!-- MODAL: DEMO WATCH -->
+  <div id="demo-modal" class="modal-overlay hidden">
+    <div class="modal-content-wrapper demo-modal-width">
+      <div class="modal-header">
+        <h2>Watch FitAI in Action</h2>
+        <button class="modal-close-btn" onclick="closeDemoModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body-content">
+        <!-- Mock Video Player with Premium Feel -->
+        <div class="mock-video-player">
+          <i class="ti ti-player-play-filled video-play-icon"></i>
+          <span class="video-overlay-text">FitAI Platform Demo Walkthrough</span>
+          <div class="video-progress-bar">
+            <div class="video-progress-fill"></div>
+          </div>
+        </div>
+        <p class="mt-4 text-muted" style="font-size:13px; line-height:1.6;">Discover how our multimodal AI model parses
+          your meals from simple photographs, translates fitness goals into full weekly training schedules, and
+          integrates seamless professional clinic scheduling into one clean interface.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BOOK PHYSIO APPOINTMENT -->
+  <div id="booking-modal" class="modal-overlay hidden">
+    <div class="modal-content-wrapper">
+      <div class="modal-header">
+        <h2>Confirm Appointment</h2>
+        <button class="modal-close-btn" onclick="closeBookingModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body-content">
+        <form id="booking-form">
+          <input type="hidden" id="book-therapist-input">
+          <input type="hidden" id="book-slot-id-input">
+
+          <div class="booking-summary-box mb-4">
+            <div class="summary-row">
+              <span class="summary-label">Therapist:</span>
+              <span id="book-therapist-name" class="summary-val">Dr. Riya Sharma</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Default Slot:</span>
+              <span id="book-default-slot" class="summary-val">Today @ 10:30 AM</span>
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label for="book-date">Choose Appointment Date</label>
+            <input type="date" id="book-date" required class="form-control-input">
+          </div>
+
+          <div class="form-group mb-4">
+            <label for="book-time">Choose Appointment Time</label>
+            <select id="book-time" required class="form-control-input">
+              <option value="9:00 AM">9:00 AM (Morning Slot)</option>
+              <option value="10:30 AM">10:30 AM (Morning Slot)</option>
+              <option value="12:00 PM">12:00 PM (Midday Slot)</option>
+              <option value="2:00 PM">2:00 PM (Afternoon Slot)</option>
+              <option value="3:30 PM">3:30 PM (Afternoon Slot)</option>
+              <option value="5:00 PM">5:00 PM (Evening Slot)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary w-full">
+            <span class="btn-text">Confirm Booking</span>
+            <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LOG PROGRESS -->
+  <div id="log-modal" class="modal-overlay hidden">
+    <div class="modal-content-wrapper">
+      <div class="modal-header">
+        <h2>Log Daily Activity</h2>
+        <button class="modal-close-btn" onclick="closeLogModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body-content">
+        <form id="log-form">
+          <div class="form-group mb-4">
+            <label for="log-date">Date</label>
+            <input type="date" id="log-date" required class="form-control-input">
+          </div>
+
+          <div class="form-grid mb-4">
+            <div class="form-group">
+              <label for="log-weight">Weight (kg)</label>
+              <input type="number" id="log-weight" step="0.1" placeholder="e.g. 78.5" class="form-control-input">
+            </div>
+            <div class="form-group">
+              <label for="log-bodyfat">Body Fat %</label>
+              <input type="number" id="log-bodyfat" step="0.1" placeholder="e.g. 21.0" class="form-control-input">
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label for="log-calories">Calories Eaten (kcal)</label>
+            <input type="number" id="log-calories" placeholder="e.g. 1850" class="form-control-input">
+          </div>
+
+          <div class="form-checkbox mb-4">
+            <label class="checkbox-container">
+              <input type="checkbox" id="log-workout">
+              <span class="checkmark"></span>
+              Completed Today's Workout
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary w-full">
+            <span class="btn-text">Save Daily Log</span>
+            <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
+          </button>
+        </form>
+      </div>
+    </div>
+    <!-- AUTHENTICATION OVERLAY (LOGIN / REGISTER SCREEN) -->
+    <div id="auth-overlay" class="modal-overlay auth-overlay">
+      <div class="modal-content-wrapper auth-modal-width">
+        <div class="auth-tabs-header">
+          <button id="tab-login-btn" class="auth-tab-choice active" onclick="switchAuthTab('login')">Sign In</button>
+          <button id="tab-register-btn" class="auth-tab-choice" onclick="switchAuthTab('register')">Create
+            Account</button>
+        </div>
+
+        <div class="modal-body-content">
+          <!-- Login Form -->
+          <form id="login-form" class="auth-form">
+            <div class="form-group mb-4">
+              <label for="login-username">Username</label>
+              <input type="text" id="login-username" placeholder="Enter username" required class="form-control-input">
+            </div>
+
+            <div class="form-group mb-4">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" placeholder="Enter password" required
+                class="form-control-input">
+            </div>
+
+            <button type="submit" class="btn-primary w-full mt-2">
+              <span class="btn-text">Log In</span>
+              <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
+            </button>
+
+            <div class="auth-tip mt-4">
+              <i class="ti ti-bulb"></i>
+              <span><strong>Quick Demo:</strong> Use username <code>demo</code> and password <code>demo123</code> to log
+                in instantly.</span>
+            </div>
+          </form>
+
+          <!-- Register Form -->
+          <form id="register-form" class="auth-form hidden">
+            <div class="form-group mb-4">
+              <label for="register-username">Username</label>
+              <input type="text" id="register-username" placeholder="Choose a username" required
+                class="form-control-input">
+            </div>
+
+            <div class="form-group mb-4">
+              <label for="register-password">Password</label>
+              <input type="password" id="register-password" placeholder="Choose a password" required
+                class="form-control-input">
+            </div>
+
+            <div class="form-group mb-4">
+              <label for="register-confirm-password">Confirm Password</label>
+              <input type="password" id="register-confirm-password" placeholder="Repeat your password" required
+                class="form-control-input">
+            </div>
+
+            <div class="form-checkbox mb-4">
+              <label class="checkbox-container">
+                <input type="checkbox" id="register-is-doctor">
+                <span class="checkmark"></span>
+                I am a Physiotherapist Doctor
+              </label>
+            </div>
+
+            <div id="doctor-registration-fields" class="hidden">
+              <div class="form-group mb-4">
+                <label for="register-doctor-name">Full Name</label>
+                <input type="text" id="register-doctor-name" placeholder="e.g. Dr. Ankita Chowdhury" class="form-control-input">
+              </div>
+              <div class="form-group mb-4">
+                <label for="register-doctor-spec">Specialization</label>
+                <input type="text" id="register-doctor-spec" placeholder="e.g. Sports Physio · Injury Rehab" class="form-control-input">
+              </div>
+              <div class="form-group mb-4">
+                <label for="register-doctor-passcode">Doctor Access Passcode</label>
+                <input type="password" id="register-doctor-passcode" placeholder="Enter secret passcode" class="form-control-input">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary w-full mt-2">
+              <span class="btn-text">Create Account &amp; Login</span>
+              <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+</body>
+
+</html>
