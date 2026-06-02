@@ -69,8 +69,10 @@ async function authenticatedFetch(url, options = {}) {
     // Auto logout if unauthorized or forbidden
     if (res.status === 401 || res.status === 403) {
       console.warn('Session expired or invalid token. Redirecting to login...');
-      showToast('Session expired. Please log in again.', 'warning');
-      handleLogout();
+      if (localStorage.getItem('fitai_token')) {
+        showToast('Session expired. Please log in again.', 'warning');
+        handleLogout();
+      }
       throw new Error('Unauthorized');
     }
     
@@ -398,6 +400,16 @@ function initAuthForms() {
 async function handleLogout() {
   const token = localStorage.getItem('fitai_token');
   if (token) {
+    // Clear local storage session
+    localStorage.removeItem('fitai_token');
+    localStorage.removeItem('fitai_username');
+    localStorage.removeItem('fitai_role');
+    localStorage.removeItem('fitai_name');
+    localStorage.removeItem('fitai_spec');
+    
+    showToast('Logged out successfully', 'info');
+    checkAuthState();
+
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
@@ -407,16 +419,6 @@ async function handleLogout() {
       console.error('Logout error on backend:', err);
     }
   }
-  
-  // Clear local storage session
-  localStorage.removeItem('fitai_token');
-  localStorage.removeItem('fitai_username');
-  localStorage.removeItem('fitai_role');
-  localStorage.removeItem('fitai_name');
-  localStorage.removeItem('fitai_spec');
-  
-  showToast('Logged out successfully', 'info');
-  checkAuthState();
 }
 
 // --- Loading Helper ---
