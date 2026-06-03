@@ -171,6 +171,23 @@
               </select>
             </div>
           </div>
+
+          <div class="form-group mt-3">
+            <label for="routine-photo-input">Body Structure Photo (Optional)</label>
+            <div class="upload-dropzone" id="routine-drop-zone" style="padding: 16px 12px; border-style: dashed; border-width: 1px; border-radius: 10px;">
+              <i class="ti ti-camera upload-icon" style="font-size: 20px; margin-bottom: 6px; color: var(--accent-green); display: block;"></i>
+              <p class="upload-text" style="font-size: 11px;">Upload physique photo for AI structure analysis</p>
+              <input type="file" id="routine-photo-input" accept="image/*" class="hidden">
+            </div>
+            <div id="routine-preview-container" class="upload-preview hidden mt-2" style="padding: 8px;">
+              <img id="routine-preview-img" src="" alt="Physique Preview" style="height: 80px; width: 100%; object-fit: contain; border-radius: 6px;">
+              <div class="preview-actions" style="margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" id="cancel-routine-photo-btn" class="btn-ghost-small" style="font-size: 10px; padding: 4px 8px;">Remove</button>
+                <span style="font-size: 10px; color: var(--accent-green); font-weight: 600;">Physique Selected ✓</span>
+              </div>
+            </div>
+          </div>
+
           <button type="submit" id="generate-routine-btn" class="btn-primary w-full mt-4">
             <span class="btn-text">Generate My AI Routine</span>
             <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>

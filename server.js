@@ -365,20 +365,38 @@ app.get('/api/routine', authenticateToken, (req, res) => {
   res.json(userRoutine);
 });
 
-app.post('/api/routine', authenticateToken, async (req, res) => {
-  const { goal, days, level, equipment } = req.body;
+app.post('/api/routine', authenticateToken, upload.single('photo'), async (req, res) => {
+  let { goal, days, level, equipment } = req.body;
+  
+  if (days) {
+    days = parseInt(days, 10);
+  }
+
   if (!goal || !days || !level || !equipment) {
     return res.status(400).json({ error: 'Goal, days, level, and equipment are required' });
   }
 
-  const prompt = `
+  let imagePart = null;
+  if (req.file) {
+    imagePart = fileToGenerativePart(req.file.buffer, req.file.mimetype);
+  }
+
+  let prompt = `
 Generate a weekly fitness workout routine in JSON format.
 Parameters:
 - Goal: ${goal}
 - Days per week: ${days}
 - Experience level: ${level}
 - Equipment available: ${equipment}
+`;
 
+  if (imagePart) {
+    prompt += `
+- Physique Analysis: You are provided with a photo of the user's physique/body structure. Analyze their posture, physique goals, muscle balance, and body composition from the photo, and customize the exercises and coaching cues specifically to address their individual body structure needs. Focus on optimizing muscle balance, fixing posture issues (e.g. forward head, rounded shoulders, pelvic tilt if visible), or prioritizing specific muscle groups to achieve their desired aesthetics/strength goals. Ensure the routine details/cues specifically mention these physique-based adjustments.
+`;
+  }
+
+  prompt += `
 You must return a JSON object with EXACTLY the following structure (do not include any additional keys, markdown text, or surrounding explanation):
 {
   "title": "A descriptive title for this routine",
@@ -406,7 +424,7 @@ Return ONLY valid JSON.
 `;
 
   try {
-    const result = await generateContentWithFallback(prompt);
+    const result = await generateContentWithFallback(prompt, imagePart);
     const data = JSON.parse(result.text);
 
     const db = readDb();

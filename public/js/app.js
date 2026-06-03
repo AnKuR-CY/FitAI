@@ -444,7 +444,7 @@ async function initHealthCheck() {
     const res = await fetch('/api/health');
     const status = await res.json();
     if (status.hasApiKey) {
-      badge.textContent = 'GEMINI ACTIVE';
+      badge.textContent = 'AI ACTIVE';
       badge.className = 'api-badge status-ai';
     } else {
       badge.textContent = 'SIMULATED MODE';
@@ -530,22 +530,88 @@ function initRoutineGenerator() {
   const form = document.getElementById('routine-form');
   const btn = document.getElementById('generate-routine-btn');
   
+  // Physique Photo Upload elements
+  const dropZone = document.getElementById('routine-drop-zone');
+  const fileInput = document.getElementById('routine-photo-input');
+  const previewContainer = document.getElementById('routine-preview-container');
+  const previewImg = document.getElementById('routine-preview-img');
+  const cancelBtn = document.getElementById('cancel-routine-photo-btn');
+  
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    
+    ['dragleave', 'dragend'].forEach(type => {
+      dropZone.addEventListener(type, () => {
+        dropZone.classList.remove('dragover');
+      });
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      
+      if (e.dataTransfer.files.length > 0) {
+        handleFileSelection(e.dataTransfer.files[0]);
+      }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFileSelection(e.target.files[0]);
+      }
+    });
+    
+    function handleFileSelection(file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('Please upload an image file.', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Image size exceeds 5MB limit.', 'error');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        dropZone.classList.add('hidden');
+        previewContainer.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    cancelBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent triggering dropZone click
+      fileInput.value = '';
+      previewImg.src = '';
+      previewContainer.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+    });
+  }
+  
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     setLoadingState(btn, true, 'Generating Plan...');
     
-    const requestData = {
-      goal: document.getElementById('goal-select').value,
-      days: parseInt(document.getElementById('days-select').value),
-      level: document.getElementById('level-select').value,
-      equipment: document.getElementById('equipment-select').value
-    };
+    const formData = new FormData();
+    formData.append('goal', document.getElementById('goal-select').value);
+    formData.append('days', document.getElementById('days-select').value);
+    formData.append('level', document.getElementById('level-select').value);
+    formData.append('equipment', document.getElementById('equipment-select').value);
+    
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      formData.append('photo', fileInput.files[0]);
+    }
     
     try {
       const res = await authenticatedFetch('/api/routine', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData)
+        body: formData
       });
       
       if (!res) return; // logout triggered
@@ -556,7 +622,12 @@ function initRoutineGenerator() {
       }
       
       if (res.ok) {
-        showToast('Workout plan generated successfully!', 'success');
+        if (data.isMock) {
+          // If Gemini API is mock but backend succeeded by returning simulated split
+          showToast(`Simulated routine loaded. Gemini error: ${data.errorMsg || 'API Key Unauthorized'}`, 'warning');
+        } else {
+          showToast('Workout plan generated successfully!', 'success');
+        }
       } else {
         showToast(data.error || 'Showing simulated routine split.', 'warning');
       }
@@ -566,7 +637,7 @@ function initRoutineGenerator() {
         badge.textContent = 'SIMULATED AI';
         badge.className = 'api-badge status-mock';
       } else {
-        badge.textContent = 'GEMINI ACTIVE';
+        badge.textContent = 'AI ACTIVE';
         badge.className = 'api-badge status-ai';
       }
       
@@ -600,7 +671,7 @@ async function fetchUserRoutine() {
       badge.textContent = 'SIMULATED AI';
       badge.className = 'api-badge status-mock';
     } else {
-      badge.textContent = 'GEMINI ACTIVE';
+      badge.textContent = 'AI ACTIVE';
       badge.className = 'api-badge status-ai';
     }
     
