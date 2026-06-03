@@ -50,7 +50,7 @@
       <span id="user-profile-badge" class="user-badge hidden">
         <i class="ti ti-user" style="font-size:12px;"></i> <span id="user-display-name">Username</span>
       </span>
-      <button class="nav-cta" onclick="openLogModal()">Log Daily Activity</button>
+      <button class="nav-cta" onclick="openLogModal()"><i class="ti ti-plus" aria-hidden="true"></i> <span class="nav-cta-text">Log Daily Activity</span></button>
       <button id="logout-nav-btn" class="btn-logout hidden" onclick="handleLogout()"><i
           class="ti ti-logout"></i></button>
     </div>
@@ -706,7 +706,10 @@
               <input type="number" id="log-weight" step="0.1" placeholder="e.g. 78.5" class="form-control-input">
             </div>
             <div class="form-group">
-              <label for="log-bodyfat">Body Fat %</label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label for="log-bodyfat" style="margin-bottom: 0;">Body Fat %</label>
+                <button type="button" class="btn-ghost-small" style="font-size: 11px; padding: 2px 6px; border: 0.5px solid var(--border-light); border-radius: 4px; color: var(--accent-blue); background: transparent; cursor: pointer;" onclick="openBodyFatCalc()">How to calculate?</button>
+              </div>
               <input type="number" id="log-bodyfat" step="0.1" placeholder="e.g. 21.0" class="form-control-input">
             </div>
           </div>
@@ -731,6 +734,69 @@
         </form>
       </div>
     </div>
+
+  <!-- BODY FAT CALCULATOR MODAL -->
+  <div id="bodyfat-calc-modal" class="modal-overlay hidden" style="z-index: 1060;">
+    <div class="modal-content-wrapper" style="max-width: 460px;">
+      <div class="modal-header">
+        <h2>Body Fat Calculator</h2>
+        <button type="button" class="modal-close-btn" onclick="closeBodyFatCalc()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body-content" style="padding: 20px 24px;">
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
+          The U.S. Navy Circumference method estimates body fat percentage using key body measurements.
+        </p>
+        
+        <form id="bf-calc-form" onsubmit="calculateBodyFat(event)">
+          <div class="form-group mb-3">
+            <label>Gender</label>
+            <div style="display: flex; gap: 16px; margin-top: 6px;">
+              <label class="checkbox-container" style="font-size: 13px;">
+                <input type="radio" name="bf-gender" value="male" checked onclick="toggleBfGender('male')">
+                <span class="checkmark" style="border-radius: 50%;"></span>
+                Male
+              </label>
+              <label class="checkbox-container" style="font-size: 13px;">
+                <input type="radio" name="bf-gender" value="female" onclick="toggleBfGender('female')">
+                <span class="checkmark" style="border-radius: 50%;"></span>
+                Female
+              </label>
+            </div>
+          </div>
+          
+          <div class="form-grid mb-3">
+            <div class="form-group">
+              <label for="bf-height">Height (cm)</label>
+              <input type="number" id="bf-height" required placeholder="e.g. 175" class="form-control-input" min="100" max="250">
+            </div>
+            <div class="form-group">
+              <label for="bf-neck">Neck (cm)</label>
+              <input type="number" id="bf-neck" required placeholder="e.g. 38" class="form-control-input" min="20" max="60" step="0.1">
+            </div>
+          </div>
+          
+          <div class="form-grid mb-4">
+            <div class="form-group">
+              <label for="bf-waist">Waist (cm)</label>
+              <input type="number" id="bf-waist" required placeholder="e.g. 88" class="form-control-input" min="40" max="200" step="0.1">
+            </div>
+            <div class="form-group id-female-only hidden" id="bf-hip-group">
+              <label for="bf-hip">Hip (cm)</label>
+              <input type="number" id="bf-hip" placeholder="e.g. 95" class="form-control-input" min="40" max="200" step="0.1">
+            </div>
+          </div>
+          
+          <button type="submit" class="btn-primary w-full mb-3" style="margin-top: 10px;">Calculate Body Fat</button>
+          
+          <div id="bf-result-box" class="hidden" style="background: rgba(184, 255, 87, 0.06); border: 0.5px solid rgba(184, 255, 87, 0.2); border-radius: 10px; padding: 16px; text-align: center; margin-top: 15px;">
+            <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Estimated Body Fat</div>
+            <div style="font-size: 32px; font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent-green); margin: 6px 0;" id="bf-calculated-value">0.0%</div>
+            <button type="button" class="btn-primary w-full" style="font-size: 12px; padding: 8px; color: var(--bg-primary); background: var(--accent-green); font-weight: 700; border: none; margin-top: 8px;" onclick="useCalculatedBodyFat()">Use This Value</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
     <!-- AUTHENTICATION OVERLAY (LOGIN / REGISTER SCREEN) -->
     <div id="auth-overlay" class="modal-overlay auth-overlay">
       <div class="modal-content-wrapper auth-modal-width">
@@ -743,21 +809,42 @@
         <div class="modal-body-content">
           <!-- Login Form -->
           <form id="login-form" class="auth-form">
-            <div class="form-group mb-4">
-              <label for="login-username">Username</label>
-              <input type="text" id="login-username" placeholder="Enter username" required class="form-control-input">
+            <div id="login-fields-password">
+              <div class="form-group mb-4">
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" placeholder="Enter username" required class="form-control-input">
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="Enter password" required
+                  class="form-control-input">
+              </div>
             </div>
 
-            <div class="form-group mb-4">
-              <label for="login-password">Password</label>
-              <input type="password" id="login-password" placeholder="Enter password" required
-                class="form-control-input">
+            <div id="login-fields-otp" class="hidden">
+              <div class="form-group mb-4">
+                <label for="login-phone">Mobile Number</label>
+                <div style="display: flex; gap: 10px;">
+                  <input type="tel" id="login-phone" placeholder="e.g. +919876543210" class="form-control-input">
+                  <button type="button" id="login-send-otp-btn" class="btn-primary" style="padding: 10px 16px; font-size: 12px; white-space: nowrap;" onclick="sendLoginOtp(event)">Send OTP</button>
+                </div>
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="login-otp">Enter OTP</label>
+                <input type="text" id="login-otp" placeholder="Enter 6-digit verification code" class="form-control-input" maxlength="6">
+              </div>
             </div>
 
             <button type="submit" class="btn-primary w-full mt-2">
-              <span class="btn-text">Log In</span>
+              <span class="btn-text" id="login-submit-btn-text">Log In</span>
               <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
             </button>
+
+            <div class="auth-toggle-link text-center mt-3" style="font-size: 12px;">
+              <a href="#" id="login-method-toggle" onclick="toggleLoginMethod(event)">Sign In with Mobile OTP</a>
+            </div>
 
             <div class="auth-tip mt-4">
               <i class="ti ti-bulb"></i>
@@ -768,52 +855,74 @@
 
           <!-- Register Form -->
           <form id="register-form" class="auth-form hidden">
-            <div class="form-group mb-4">
-              <label for="register-username">Username</label>
-              <input type="text" id="register-username" placeholder="Choose a username" required
-                class="form-control-input">
-            </div>
-
-            <div class="form-group mb-4">
-              <label for="register-password">Password</label>
-              <input type="password" id="register-password" placeholder="Choose a password" required
-                class="form-control-input">
-            </div>
-
-            <div class="form-group mb-4">
-              <label for="register-confirm-password">Confirm Password</label>
-              <input type="password" id="register-confirm-password" placeholder="Repeat your password" required
-                class="form-control-input">
-            </div>
-
-            <div class="form-checkbox mb-4">
-              <label class="checkbox-container">
-                <input type="checkbox" id="register-is-doctor">
-                <span class="checkmark"></span>
-                I am a Physiotherapist Doctor
-              </label>
-            </div>
-
-            <div id="doctor-registration-fields" class="hidden">
+            <div id="register-fields-inputs">
               <div class="form-group mb-4">
-                <label for="register-doctor-name">Full Name</label>
-                <input type="text" id="register-doctor-name" placeholder="e.g. Dr. Ankita Chowdhury"
+                <label for="register-username">Username</label>
+                <input type="text" id="register-username" placeholder="Choose a username" required
                   class="form-control-input">
               </div>
+
               <div class="form-group mb-4">
-                <label for="register-doctor-spec">Specialization</label>
-                <input type="text" id="register-doctor-spec" placeholder="e.g. Sports Physio · Injury Rehab"
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" placeholder="Choose a password" required
                   class="form-control-input">
               </div>
+
               <div class="form-group mb-4">
-                <label for="register-doctor-passcode">Doctor Access Passcode</label>
-                <input type="password" id="register-doctor-passcode" placeholder="Enter secret passcode"
+                <label for="register-confirm-password">Confirm Password</label>
+                <input type="password" id="register-confirm-password" placeholder="Repeat your password" required
                   class="form-control-input">
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="register-phone">Mobile Number</label>
+                <input type="tel" id="register-phone" placeholder="e.g. +919876543210" required
+                  class="form-control-input">
+              </div>
+
+              <div class="form-checkbox mb-4">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="register-is-doctor">
+                  <span class="checkmark"></span>
+                  I am a Physiotherapist Doctor
+                </label>
+              </div>
+
+              <div id="doctor-registration-fields" class="hidden">
+                <div class="form-group mb-4">
+                  <label for="register-doctor-name">Full Name</label>
+                  <input type="text" id="register-doctor-name" placeholder="e.g. Dr. Ankita Chowdhury"
+                    class="form-control-input">
+                </div>
+                <div class="form-group mb-4">
+                  <label for="register-doctor-spec">Specialization</label>
+                  <input type="text" id="register-doctor-spec" placeholder="e.g. Sports Physio · Injury Rehab"
+                    class="form-control-input">
+                </div>
+                <div class="form-group mb-4">
+                  <label for="register-doctor-passcode">Doctor Access Passcode</label>
+                  <input type="password" id="register-doctor-passcode" placeholder="Enter secret passcode"
+                    class="form-control-input">
+                </div>
+              </div>
+            </div>
+
+            <div id="register-fields-otp" class="hidden">
+              <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; text-align: center;">
+                We have sent a verification code to <span id="register-otp-phone-display" style="color: var(--accent-green); font-weight: 600;">your phone</span>. Please enter it below.
+              </p>
+              <div class="form-group mb-4">
+                <label for="register-otp">Verification Code (OTP)</label>
+                <input type="text" id="register-otp" placeholder="Enter 6-digit code" class="form-control-input" maxlength="6">
+              </div>
+              <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                <button type="button" class="btn-ghost w-1/2" style="font-size: 12px; padding: 10px;" onclick="cancelRegisterOtp()">Edit Details</button>
+                <button type="button" class="btn-ghost w-1/2" style="font-size: 12px; padding: 10px; border-color: var(--accent-green); color: var(--accent-green);" onclick="resendRegisterOtp(event)">Resend OTP</button>
               </div>
             </div>
 
             <button type="submit" class="btn-primary w-full mt-2">
-              <span class="btn-text">Create Account &amp; Login</span>
+              <span class="btn-text" id="register-submit-btn-text">Create Account &amp; Login</span>
               <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
             </button>
           </form>

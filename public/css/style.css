@@ -2560,4 +2560,83 @@ body.fit-root {
   margin-bottom: 12px;
 }
 
+/* MOBILE & RESPONSIVE LAYOUT PATCHES */
+@media (max-width: 600px) {
+  /* Navbar adjustments to prevent horizontal overflow */
+  .nav {
+    padding: 12px 16px !important;
+  }
+  
+  .nav-cta-text {
+    display: none !important;
+  }
+  
+  .nav-cta {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .nav-actions {
+    gap: 8px !important;
+  }
 
+  /* Section header stacking */
+  .dash-section-header, .doctor-dash-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+  
+  .dash-section-header .btn-primary, .doctor-dash-header .btn-primary {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Form columns grid for slot creation & details */
+  .form-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Body fat calculator grid fields */
+  #bf-calc-form .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Profile badge user name hidden on very narrow screens */
+  #user-display-name {
+    display: none !important;
+  }
+  
+  .user-badge {
+    padding: 8px !important;
+  }
+}
+
+/* AUTH TOGGLE LINKS */
+.auth-toggle-link a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.auth-toggle-link a:hover {
+  color: var(--accent-green);
+  text-decoration: underline;
+}
+
+/* MOCK SMS BANNER TRANSITIONS */
+#mock-sms-banner {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  border-left: 4px solid var(--accent-orange) !important;
+}

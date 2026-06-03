@@ -257,6 +257,253 @@ function switchAuthTab(tab) {
   }
 }
 
+// OTP LOGIN / REGISTER STATE
+let loginMethod = 'password';
+let registerOtpSent = false;
+
+function toggleLoginMethod(e) {
+  if (e) e.preventDefault();
+  const passFields = document.getElementById('login-fields-password');
+  const otpFields = document.getElementById('login-fields-otp');
+  const toggleBtn = document.getElementById('login-method-toggle');
+  const submitText = document.getElementById('login-submit-btn-text');
+  
+  const usernameInput = document.getElementById('login-username');
+  const passwordInput = document.getElementById('login-password');
+  const phoneInput = document.getElementById('login-phone');
+  const otpInput = document.getElementById('login-otp');
+  
+  if (loginMethod === 'password') {
+    loginMethod = 'otp';
+    passFields.classList.add('hidden');
+    otpFields.classList.remove('hidden');
+    toggleBtn.textContent = 'Sign In with Username & Password';
+    submitText.textContent = 'Verify & Sign In';
+    usernameInput.required = false;
+    passwordInput.required = false;
+    phoneInput.required = true;
+    otpInput.required = true;
+  } else {
+    loginMethod = 'password';
+    passFields.classList.remove('hidden');
+    otpFields.classList.add('hidden');
+    toggleBtn.textContent = 'Sign In with Mobile OTP';
+    submitText.textContent = 'Log In';
+    usernameInput.required = true;
+    passwordInput.required = true;
+    phoneInput.required = false;
+    otpInput.required = false;
+  }
+}
+
+async function sendLoginOtp(e) {
+  if (e) e.preventDefault();
+  const phoneInput = document.getElementById('login-phone');
+  const sendBtn = document.getElementById('login-send-otp-btn');
+  
+  if (!phoneInput.value.trim()) {
+    showToast('Please enter a valid mobile number.', 'error');
+    return;
+  }
+  
+  setLoadingState(sendBtn, true, 'Sending...');
+  
+  try {
+    const res = await fetch('/api/auth/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phoneInput.value })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to send OTP');
+    }
+    showToast('OTP sent successfully!', 'success');
+    showMockSmsBanner(phoneInput.value, data.otp);
+  } catch (err) {
+    showToast(err.message, 'error');
+  } finally {
+    setLoadingState(sendBtn, false, 'Send OTP');
+  }
+}
+
+function cancelRegisterOtp() {
+  registerOtpSent = false;
+  document.getElementById('register-fields-inputs').classList.remove('hidden');
+  document.getElementById('register-fields-otp').classList.add('hidden');
+  
+  const submitText = document.getElementById('register-submit-btn-text');
+  submitText.textContent = 'Create Account & Login';
+  
+  const usernameInput = document.getElementById('register-username');
+  const passwordInput = document.getElementById('register-password');
+  const confirmInput = document.getElementById('register-confirm-password');
+  const phoneInput = document.getElementById('register-phone');
+  const otpInput = document.getElementById('register-otp');
+  
+  usernameInput.required = true;
+  passwordInput.required = true;
+  confirmInput.required = true;
+  phoneInput.required = true;
+  if (otpInput) otpInput.required = false;
+}
+
+async function resendRegisterOtp(e) {
+  if (e) e.preventDefault();
+  const phoneInput = document.getElementById('register-phone');
+  if (!phoneInput.value.trim()) return;
+  
+  try {
+    const res = await fetch('/api/auth/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phoneInput.value })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to resend OTP');
+    }
+    showToast('OTP code resent successfully!', 'success');
+    showMockSmsBanner(phoneInput.value, data.otp);
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
+}
+
+function showMockSmsBanner(phone, code) {
+  const existing = document.getElementById('mock-sms-banner');
+  if (existing) existing.remove();
+  
+  const banner = document.createElement('div');
+  banner.id = 'mock-sms-banner';
+  banner.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    width: 90%;
+    max-width: 400px;
+    background: #111827;
+    border: 1px solid var(--accent-orange);
+    border-radius: 12px;
+    padding: 14px 18px;
+    z-index: 2000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  `;
+  
+  banner.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
+      <span style="font-size: 11px; font-weight: 700; color: var(--accent-orange); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
+        <i class="ti ti-message"></i> Messages (Mock SMS)
+      </span>
+      <span style="font-size: 10px; color: var(--text-muted);">Just now</span>
+    </div>
+    <div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">FitAI Verification</div>
+    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+      Your FitAI verification code is <strong style="color: var(--accent-green); font-size: 14px;">${code}</strong>. Valid for 5 minutes.
+    </div>
+    <button onclick="document.getElementById('mock-sms-banner').remove()" style="position: absolute; top: 12px; right: 12px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;"><i class="ti ti-x"></i></button>
+  `;
+  
+  document.body.appendChild(banner);
+  
+  setTimeout(() => {
+    banner.style.transform = 'translateX(-50%) translateY(0)';
+    banner.style.opacity = '1';
+  }, 50);
+  
+  setTimeout(() => {
+    const activeBanner = document.getElementById('mock-sms-banner');
+    if (activeBanner) {
+      activeBanner.style.opacity = '0';
+      activeBanner.style.transform = 'translateX(-50%) translateY(-20px)';
+      setTimeout(() => activeBanner.remove(), 300);
+    }
+  }, 15000);
+}
+
+// BODY FAT CALCULATOR FUNCTIONS
+function openBodyFatCalc() {
+  document.getElementById('bodyfat-calc-modal').classList.remove('hidden');
+}
+
+function closeBodyFatCalc() {
+  document.getElementById('bodyfat-calc-modal').classList.add('hidden');
+}
+
+function toggleBfGender(gender) {
+  const hipGroup = document.getElementById('bf-hip-group');
+  const hipInput = document.getElementById('bf-hip');
+  if (gender === 'female') {
+    hipGroup.classList.remove('hidden');
+    hipInput.required = true;
+  } else {
+    hipGroup.classList.add('hidden');
+    hipInput.required = false;
+    hipInput.value = '';
+  }
+}
+
+let calculatedBfPercentage = 0;
+
+function calculateBodyFat(event) {
+  event.preventDefault();
+  const gender = document.querySelector('input[name="bf-gender"]:checked').value;
+  const height = parseFloat(document.getElementById('bf-height').value);
+  const neck = parseFloat(document.getElementById('bf-neck').value);
+  const waist = parseFloat(document.getElementById('bf-waist').value);
+  
+  if (isNaN(height) || isNaN(neck) || isNaN(waist)) return;
+
+  let bfp = 0;
+  if (gender === 'male') {
+    if (waist <= neck) {
+      showToast('Waist must be greater than neck circumference.', 'error');
+      return;
+    }
+    const density = 1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height);
+    bfp = 495 / density - 450;
+  } else {
+    const hip = parseFloat(document.getElementById('bf-hip').value);
+    if (isNaN(hip)) return;
+    if ((waist + hip) <= neck) {
+      showToast('Waist + Hip must be greater than neck circumference.', 'error');
+      return;
+    }
+    const density = 1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height);
+    bfp = 495 / density - 450;
+  }
+
+  if (bfp < 2) bfp = 2;
+  if (bfp > 60) bfp = 60;
+
+  calculatedBfPercentage = parseFloat(bfp.toFixed(1));
+  document.getElementById('bf-calculated-value').innerText = calculatedBfPercentage + '%';
+  document.getElementById('bf-result-box').classList.remove('hidden');
+}
+
+function useCalculatedBodyFat() {
+  document.getElementById('log-bodyfat').value = calculatedBfPercentage;
+  closeBodyFatCalc();
+  showToast(`Applied body fat percentage of ${calculatedBfPercentage}% to daily log!`, 'success');
+}
+
+// Global scope bindings
+window.toggleLoginMethod = toggleLoginMethod;
+window.sendLoginOtp = sendLoginOtp;
+window.cancelRegisterOtp = cancelRegisterOtp;
+window.resendRegisterOtp = resendRegisterOtp;
+window.openBodyFatCalc = openBodyFatCalc;
+window.closeBodyFatCalc = closeBodyFatCalc;
+window.toggleBfGender = toggleBfGender;
+window.calculateBodyFat = calculateBodyFat;
+window.useCalculatedBodyFat = useCalculatedBodyFat;
+
 function initAuthForms() {
   const loginForm = document.getElementById('login-form');
   const registerForm = document.getElementById('register-form');
@@ -266,19 +513,35 @@ function initAuthForms() {
     e.preventDefault();
     const usernameInput = document.getElementById('login-username');
     const passwordInput = document.getElementById('login-password');
+    const phoneInput = document.getElementById('login-phone');
+    const otpInput = document.getElementById('login-otp');
     const submitBtn = loginForm.querySelector('button[type="submit"]');
     
-    setLoadingState(submitBtn, true, 'Logging In...');
+    setLoadingState(submitBtn, true, 'Verifying...');
     
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      let res, reqBody;
+      if (loginMethod === 'password') {
+        reqBody = {
           username: usernameInput.value,
           password: passwordInput.value
-        })
-      });
+        };
+        res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reqBody)
+        });
+      } else {
+        reqBody = {
+          phone: phoneInput.value,
+          otp: otpInput.value
+        };
+        res = await fetch('/api/auth/login-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reqBody)
+        });
+      }
       
       const data = await res.json();
       
@@ -286,7 +549,6 @@ function initAuthForms() {
         throw new Error(data.error || 'Login failed');
       }
       
-      // Save session credentials
       localStorage.setItem('fitai_token', data.token);
       localStorage.setItem('fitai_username', data.username);
       localStorage.setItem('fitai_role', data.role || 'user');
@@ -296,16 +558,22 @@ function initAuthForms() {
       showToast(`Welcome back, ${data.username}!`, 'success');
       
       // Clean inputs
-      usernameInput.value = '';
-      passwordInput.value = '';
+      if (usernameInput) usernameInput.value = '';
+      if (passwordInput) passwordInput.value = '';
+      if (phoneInput) phoneInput.value = '';
+      if (otpInput) otpInput.value = '';
       
-      // Refresh state
+      // Reset method if it was OTP
+      if (loginMethod === 'otp') {
+        toggleLoginMethod();
+      }
+      
       checkAuthState();
     } catch (err) {
       console.error(err);
       showToast(err.message, 'error');
     } finally {
-      setLoadingState(submitBtn, false, 'Log In');
+      setLoadingState(submitBtn, false, loginMethod === 'password' ? 'Log In' : 'Verify & Sign In');
     }
   });
   
@@ -334,6 +602,8 @@ function initAuthForms() {
     const usernameInput = document.getElementById('register-username');
     const passwordInput = document.getElementById('register-password');
     const confirmInput = document.getElementById('register-confirm-password');
+    const phoneInput = document.getElementById('register-phone');
+    const otpInput = document.getElementById('register-otp');
     const submitBtn = registerForm.querySelector('button[type="submit"]');
     
     if (passwordInput.value !== confirmInput.value) {
@@ -341,12 +611,54 @@ function initAuthForms() {
       return;
     }
     
-    setLoadingState(submitBtn, true, 'Creating Account...');
-
     const isDoctor = isDoctorCheckbox?.checked || false;
+    
+    // STEP 1: If OTP has not been sent yet, request OTP
+    if (!registerOtpSent) {
+      setLoadingState(submitBtn, true, 'Sending OTP...');
+      try {
+        const res = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: phoneInput.value })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to send verification code');
+        }
+        
+        // Show OTP step
+        registerOtpSent = true;
+        document.getElementById('register-fields-inputs').classList.add('hidden');
+        document.getElementById('register-fields-otp').classList.remove('hidden');
+        document.getElementById('register-otp-phone-display').textContent = phoneInput.value;
+        
+        // Disable main fields validation requirements so form submits with OTP
+        usernameInput.required = false;
+        passwordInput.required = false;
+        confirmInput.required = false;
+        phoneInput.required = false;
+        otpInput.required = true;
+        
+        showToast('Verification code sent!', 'success');
+        showMockSmsBanner(phoneInput.value, data.otp);
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        setLoadingState(submitBtn, false, 'Verify & Create Account');
+      }
+      return;
+    }
+    
+    // STEP 2: Submit full registration details along with OTP
+    setLoadingState(submitBtn, true, 'Creating Account...');
+    
     const requestBody = {
       username: usernameInput.value,
-      password: passwordInput.value
+      password: passwordInput.value,
+      phone: phoneInput.value,
+      otp: otpInput.value
     };
     if (isDoctor) {
       requestBody.role = 'doctor';
@@ -368,7 +680,6 @@ function initAuthForms() {
         throw new Error(data.error || 'Registration failed');
       }
       
-      // Save session credentials (auto login)
       localStorage.setItem('fitai_token', data.token);
       localStorage.setItem('fitai_username', data.username);
       localStorage.setItem('fitai_role', data.role || 'user');
@@ -377,17 +688,19 @@ function initAuthForms() {
       
       showToast(`Welcome to FitAI, ${data.username}!`, 'success');
       
-      // Clean inputs
+      // Reset inputs & wrapper
       usernameInput.value = '';
       passwordInput.value = '';
       confirmInput.value = '';
+      phoneInput.value = '';
+      otpInput.value = '';
       if (isDoctorCheckbox) isDoctorCheckbox.checked = false;
       if (doctorFields) doctorFields.classList.add('hidden');
       document.getElementById('register-doctor-name').value = '';
       document.getElementById('register-doctor-spec').value = '';
       document.getElementById('register-doctor-passcode').value = '';
       
-      // Refresh state
+      cancelRegisterOtp();
       checkAuthState();
     } catch (err) {
       console.error(err);

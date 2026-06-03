@@ -40,8 +40,21 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, default: 'user' },
   name: String,
   specialization: String,
-  rating: Number
+  rating: Number,
+  phone: String,
+  isPhoneVerified: { type: Boolean, default: false }
 });
+
+const OtpCodeSchema = new mongoose.Schema({
+  phone: { type: String, required: true },
+  code: { type: String, required: true },
+  expiresAt: { type: Date, required: true }
+});
+
+// TTL index to automatically delete expired OTPs
+OtpCodeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
+const OtpCode = mongoose.model('OtpCode', OtpCodeSchema);
 
 const SessionSchema = new mongoose.Schema({
   token: { type: String, required: true, unique: true },
@@ -228,5 +241,6 @@ module.exports = {
   WorkoutHistory,
   Appointment,
   Slot,
-  Log
+  Log,
+  OtpCode
 };

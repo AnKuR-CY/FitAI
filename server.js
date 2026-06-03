@@ -20,7 +20,8 @@ const {
   WorkoutHistory,
   Appointment,
   Slot,
-  Log
+  Log,
+  OtpCode
 } = require('./db');
 
 const app = express();
@@ -154,10 +155,46 @@ app.get('/api/health', (req, res) => {
 });
 
 // 0. AUTH ROUTING
+app.post('/api/auth/send-otp', async (req, res) => {
+  let { phone } = req.body;
+  if (!phone) {
+    return res.status(400).json({ error: 'Phone number is required' });
+  }
+
+  phone = phone.trim();
+
+  try {
+    // Generate 6-digit random code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins expiry
+
+    // Save/update OTP in database
+    await OtpCode.findOneAndUpdate(
+      { phone },
+      { code, expiresAt },
+      { upsert: true, new: true }
+    );
+
+    console.log(`\n========================================\n[Mock SMS Gateway] To: ${phone}\nMessage: Your FitAI verification code is ${code}. Valid for 5 minutes.\n========================================\n`);
+
+    res.json({
+      success: true,
+      message: `OTP sent successfully to ${phone}`,
+      otp: code // Returned for frontend Mock SMS simulator banner
+    });
+  } catch (err) {
+    console.error('Failed to send OTP:', err);
+    res.status(500).json({ error: 'Failed to send OTP due to database error.' });
+  }
+});
+
 app.post('/api/auth/register', async (req, res) => {
-  const { username, password, role, name, specialization, passcode } = req.body;
+  const { username, password, role, name, specialization, passcode, phone, otp } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
+  }
+  if (!phone || !otp) {
+    return res.status(400).json({ error: 'Mobile number and OTP verification are required to register' });
   }
 
   try {
@@ -166,6 +203,20 @@ app.post('/api/auth/register', async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ error: 'Username is already taken' });
     }
+
+    const existingPhone = await User.findOne({ phone: phone.trim() });
+    if (existingPhone) {
+      return res.status(400).json({ error: 'Mobile number is already registered' });
+    }
+
+    // Verify OTP code
+    const otpRecord = await OtpCode.findOne({ phone: phone.trim() });
+    if (!otpRecord || otpRecord.code !== otp || Date.now() > otpRecord.expiresAt) {
+      return res.status(400).json({ error: 'Invalid or expired OTP code. Please request a new one.' });
+    }
+
+    // Delete the verified OTP
+    await OtpCode.deleteOne({ _id: otpRecord._id });
 
     // Role authentication check
     let finalRole = 'user';
@@ -186,6 +237,8 @@ app.post('/api/auth/register', async (req, res) => {
       username,
       passwordHash,
       role: finalRole,
+      phone: phone.trim(),
+      isPhoneVerified: true,
       name: finalRole === 'doctor' ? (name || `Dr. ${username}`) : name,
       specialization: finalRole === 'doctor' ? (specialization || 'General Physiotherapist') : undefined,
       rating: finalRole === 'doctor' ? 5.0 : undefined
@@ -207,6 +260,46 @@ app.post('/api/auth/register', async (req, res) => {
   } catch (err) {
     console.error('Registration failed:', err);
     res.status(500).json({ error: 'Internal server error during registration' });
+  }
+});
+
+app.post('/api/auth/login-otp', async (req, res) => {
+  const { phone, otp } = req.body;
+  if (!phone || !otp) {
+    return res.status(400).json({ error: 'Phone number and OTP are required' });
+  }
+
+  try {
+    const user = await User.findOne({ phone: phone.trim() });
+    if (!user) {
+      return res.status(404).json({ error: 'No account found with this mobile number. Please register first.' });
+    }
+
+    // Verify OTP
+    const otpRecord = await OtpCode.findOne({ phone: phone.trim() });
+    if (!otpRecord || otpRecord.code !== otp || Date.now() > otpRecord.expiresAt) {
+      return res.status(400).json({ error: 'Invalid or expired OTP code.' });
+    }
+
+    // Delete verified OTP
+    await OtpCode.deleteOne({ _id: otpRecord._id });
+
+    // Create session
+    const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+    const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days expiry
+
+    await Session.create({ token, userId: user.id, expiresAt });
+
+    res.json({
+      token,
+      username: user.username,
+      role: user.role || 'user',
+      name: user.name,
+      specialization: user.specialization
+    });
+  } catch (err) {
+    console.error('OTP Login failed:', err);
+    res.status(500).json({ error: 'Internal server error during OTP login' });
   }
 });
 
