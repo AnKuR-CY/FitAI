@@ -362,13 +362,18 @@ function cancelRegisterOtp() {
 async function resendRegisterOtp(e) {
   if (e) e.preventDefault();
   const phoneInput = document.getElementById('register-phone');
+  const usernameInput = document.getElementById('register-username');
   if (!phoneInput.value.trim()) return;
   
   try {
     const res = await fetch('/api/auth/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: phoneInput.value })
+      body: JSON.stringify({ 
+        phone: phoneInput.value,
+        username: usernameInput ? usernameInput.value : '',
+        isRegister: true
+      })
     });
     const data = await res.json();
     if (!res.ok) {
@@ -504,6 +509,20 @@ function useCalculatedBodyFat() {
   showToast(`Applied body fat percentage of ${calculatedBfPercentage}% to daily log!`, 'success');
 }
 
+function togglePasswordVisibility(id) {
+  const input = document.getElementById(id);
+  const icon = document.getElementById(`${id}-eye-icon`);
+  if (input && icon) {
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'ti ti-eye-off';
+    } else {
+      input.type = 'password';
+      icon.className = 'ti ti-eye';
+    }
+  }
+}
+
 // Global scope bindings
 window.toggleLoginMethod = toggleLoginMethod;
 window.sendLoginOtp = sendLoginOtp;
@@ -514,45 +533,30 @@ window.closeBodyFatCalc = closeBodyFatCalc;
 window.toggleBfGender = toggleBfGender;
 window.calculateBodyFat = calculateBodyFat;
 window.useCalculatedBodyFat = useCalculatedBodyFat;
+window.togglePasswordVisibility = togglePasswordVisibility;
 
 function initAuthForms() {
   const loginForm = document.getElementById('login-form');
   const registerForm = document.getElementById('register-form');
   
-  // Handle Login Submit
+  // Handle Login Submit (Standard Password Login)
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const usernameInput = document.getElementById('login-username');
     const passwordInput = document.getElementById('login-password');
-    const phoneInput = document.getElementById('login-phone');
-    const otpInput = document.getElementById('login-otp');
     const submitBtn = loginForm.querySelector('button[type="submit"]');
     
-    setLoadingState(submitBtn, true, 'Verifying...');
+    setLoadingState(submitBtn, true, 'Logging In...');
     
     try {
-      let res, reqBody;
-      if (loginMethod === 'password') {
-        reqBody = {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           username: usernameInput.value,
           password: passwordInput.value
-        };
-        res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(reqBody)
-        });
-      } else {
-        reqBody = {
-          phone: phoneInput.value,
-          otp: otpInput.value
-        };
-        res = await fetch('/api/auth/login-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(reqBody)
-        });
-      }
+        })
+      });
       
       const data = await res.json();
       
@@ -571,20 +575,13 @@ function initAuthForms() {
       // Clean inputs
       if (usernameInput) usernameInput.value = '';
       if (passwordInput) passwordInput.value = '';
-      if (phoneInput) phoneInput.value = '';
-      if (otpInput) otpInput.value = '';
-      
-      // Reset method if it was OTP
-      if (loginMethod === 'otp') {
-        toggleLoginMethod();
-      }
       
       checkAuthState();
     } catch (err) {
       console.error(err);
       showToast(err.message, 'error');
     } finally {
-      setLoadingState(submitBtn, false, loginMethod === 'password' ? 'Log In' : 'Verify & Sign In');
+      setLoadingState(submitBtn, false, 'Log In');
     }
   });
   
@@ -631,7 +628,11 @@ function initAuthForms() {
         const res = await fetch('/api/auth/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: phoneInput.value })
+          body: JSON.stringify({ 
+            phone: phoneInput.value,
+            username: usernameInput.value,
+            isRegister: true
+          })
         });
         const data = await res.json();
         

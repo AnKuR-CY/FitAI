@@ -156,7 +156,7 @@ app.get('/api/health', (req, res) => {
 
 // 0. AUTH ROUTING
 app.post('/api/auth/send-otp', async (req, res) => {
-  let { phone } = req.body;
+  let { phone, username, isRegister } = req.body;
   if (!phone) {
     return res.status(400).json({ error: 'Phone number is required' });
   }
@@ -164,6 +164,18 @@ app.post('/api/auth/send-otp', async (req, res) => {
   phone = phone.trim();
 
   try {
+    if (isRegister) {
+      if (username) {
+        const existingUser = await User.findOne({ username: { $regex: new RegExp(`^${username.trim()}$`, 'i') } });
+        if (existingUser) {
+          return res.status(400).json({ error: 'Username is already taken' });
+        }
+      }
+      const existingPhone = await User.findOne({ phone });
+      if (existingPhone) {
+        return res.status(400).json({ error: 'Mobile number is already registered' });
+      }
+    }
     // Generate 6-digit random code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins expiry

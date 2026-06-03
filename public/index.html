@@ -817,23 +817,13 @@
 
               <div class="form-group mb-4">
                 <label for="login-password">Password</label>
-                <input type="password" id="login-password" placeholder="Enter password" required
-                  class="form-control-input">
-              </div>
-            </div>
-
-            <div id="login-fields-otp" class="hidden">
-              <div class="form-group mb-4">
-                <label for="login-phone">Mobile Number</label>
-                <div style="display: flex; gap: 8px; align-items: stretch; margin-top: 6px;">
-                  <input type="tel" id="login-phone" placeholder="e.g. +919876543210" class="form-control-input" style="margin-top: 0; flex: 1; min-width: 0;">
-                  <button type="button" id="login-send-otp-btn" class="btn-primary" style="padding: 0 14px; font-size: 12px; white-space: nowrap; border-radius: 10px; height: 40px; display: inline-flex; align-items: center; justify-content: center;" onclick="sendLoginOtp(event)">Send OTP</button>
+                <div style="position: relative;">
+                  <input type="password" id="login-password" placeholder="Enter password" required
+                    class="form-control-input" style="padding-right: 44px;">
+                  <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-top: 3px;">
+                    <i class="ti ti-eye" id="login-password-eye-icon"></i>
+                  </button>
                 </div>
-              </div>
-
-              <div class="form-group mb-4">
-                <label for="login-otp">Enter OTP</label>
-                <input type="text" id="login-otp" placeholder="Enter 6-digit verification code" class="form-control-input" maxlength="6">
               </div>
             </div>
 
@@ -841,10 +831,6 @@
               <span class="btn-text" id="login-submit-btn-text">Log In</span>
               <span class="btn-spinner hidden"><i class="ti ti-loader-quarter animate-spin"></i></span>
             </button>
-
-            <div class="auth-toggle-link text-center mt-3" style="font-size: 12px;">
-              <a href="#" id="login-method-toggle" onclick="toggleLoginMethod(event)">Sign In with Mobile OTP</a>
-            </div>
 
             <div class="auth-tip mt-4">
               <i class="ti ti-bulb"></i>
@@ -864,14 +850,24 @@
 
               <div class="form-group mb-4">
                 <label for="register-password">Password</label>
-                <input type="password" id="register-password" placeholder="Choose a password" required
-                  class="form-control-input">
+                <div style="position: relative;">
+                  <input type="password" id="register-password" placeholder="Choose a password" required
+                    class="form-control-input" style="padding-right: 44px;">
+                  <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('register-password')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-top: 3px;">
+                    <i class="ti ti-eye" id="register-password-eye-icon"></i>
+                  </button>
+                </div>
               </div>
 
               <div class="form-group mb-4">
                 <label for="register-confirm-password">Confirm Password</label>
-                <input type="password" id="register-confirm-password" placeholder="Repeat your password" required
-                  class="form-control-input">
+                <div style="position: relative;">
+                  <input type="password" id="register-confirm-password" placeholder="Repeat your password" required
+                    class="form-control-input" style="padding-right: 44px;">
+                  <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('register-confirm-password')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-top: 3px;">
+                    <i class="ti ti-eye" id="register-confirm-password-eye-icon"></i>
+                  </button>
+                </div>
               </div>
 
               <div class="form-group mb-4">
@@ -901,8 +897,13 @@
                 </div>
                 <div class="form-group mb-4">
                   <label for="register-doctor-passcode">Doctor Access Passcode</label>
-                  <input type="password" id="register-doctor-passcode" placeholder="Enter secret passcode"
-                    class="form-control-input">
+                  <div style="position: relative;">
+                    <input type="password" id="register-doctor-passcode" placeholder="Enter secret passcode"
+                      class="form-control-input" style="padding-right: 44px;">
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('register-doctor-passcode')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-top: 3px;">
+                      <i class="ti ti-eye" id="register-doctor-passcode-eye-icon"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
