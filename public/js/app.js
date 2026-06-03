@@ -346,6 +346,17 @@ function cancelRegisterOtp() {
   confirmInput.required = true;
   phoneInput.required = true;
   if (otpInput) otpInput.required = false;
+
+  // Re-enable doctor fields required status if checkbox is checked
+  const isDoctorCheckbox = document.getElementById('register-is-doctor');
+  if (isDoctorCheckbox && isDoctorCheckbox.checked) {
+    const docName = document.getElementById('register-doctor-name');
+    const docSpec = document.getElementById('register-doctor-spec');
+    const docPasscode = document.getElementById('register-doctor-passcode');
+    if (docName) docName.required = true;
+    if (docSpec) docSpec.required = true;
+    if (docPasscode) docPasscode.required = true;
+  }
 }
 
 async function resendRegisterOtp(e) {
@@ -640,6 +651,14 @@ function initAuthForms() {
         confirmInput.required = false;
         phoneInput.required = false;
         otpInput.required = true;
+        
+        // Also clear doctor fields required state
+        const docName = document.getElementById('register-doctor-name');
+        const docSpec = document.getElementById('register-doctor-spec');
+        const docPasscode = document.getElementById('register-doctor-passcode');
+        if (docName) docName.required = false;
+        if (docSpec) docSpec.required = false;
+        if (docPasscode) docPasscode.required = false;
         
         showToast('Verification code sent!', 'success');
         showMockSmsBanner(phoneInput.value, data.otp);
