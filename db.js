@@ -11,7 +11,11 @@ if (!process.env.MONGODB_URI) {
 let cachedConnection = null;
 
 async function connectDb() {
-  if (cachedConnection) {
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
+  if (mongoose.connection.readyState === 2) {
     return cachedConnection;
   }
 

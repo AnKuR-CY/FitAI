@@ -61,6 +61,7 @@ async function authenticatedFetch(url, options = {}) {
   
   if (token) {
     options.headers['Authorization'] = `Bearer ${token}`;
+    options.headers['X-Authorization'] = `Bearer ${token}`;
   }
   
   try {
@@ -413,7 +414,10 @@ async function handleLogout() {
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'X-Authorization': `Bearer ${token}`
+        }
       });
     } catch (err) {
       console.error('Logout error on backend:', err);

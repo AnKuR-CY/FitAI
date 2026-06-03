@@ -113,7 +113,7 @@ async function generateContentWithFallback(prompt, imagePart = null) {
 
 // --- AUTHENTICATION MIDDLEWARE ---
 async function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers['x-authorization'] || req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
 
   if (!token) {
