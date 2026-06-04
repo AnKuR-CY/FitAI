@@ -885,7 +885,7 @@ app.get('/api/dashboard/stats', authenticateToken, async (req, res) => {
 });
 
 app.post('/api/dashboard/log', authenticateToken, async (req, res) => {
-  const { date, weight, bodyFat, calories, workoutDone } = req.body;
+  const { date, weight, bodyFat, calories, workoutDone, water } = req.body;
   
   if (!date) {
     return res.status(400).json({ error: 'Date is required (YYYY-MM-DD)' });
@@ -900,7 +900,8 @@ app.post('/api/dashboard/log', authenticateToken, async (req, res) => {
       weight: weight !== undefined ? parseFloat(weight) : undefined,
       bodyFat: bodyFat !== undefined ? parseFloat(bodyFat) : undefined,
       calories: calories !== undefined ? parseInt(calories) : undefined,
-      workoutDone: workoutDone !== undefined ? !!workoutDone : false
+      workoutDone: workoutDone !== undefined ? !!workoutDone : false,
+      water: water !== undefined ? parseInt(water) : undefined
     };
 
     if (existingLog) {
@@ -909,6 +910,7 @@ app.post('/api/dashboard/log', authenticateToken, async (req, res) => {
       existingLog.bodyFat = logEntry.bodyFat !== undefined ? logEntry.bodyFat : existingLog.bodyFat;
       existingLog.calories = logEntry.calories !== undefined ? logEntry.calories : existingLog.calories;
       existingLog.workoutDone = workoutDone !== undefined ? logEntry.workoutDone : existingLog.workoutDone;
+      existingLog.water = logEntry.water !== undefined ? logEntry.water : existingLog.water;
       await existingLog.save();
       
       res.status(200).json({ message: 'Log updated successfully', entry: existingLog });
@@ -920,6 +922,7 @@ app.post('/api/dashboard/log', authenticateToken, async (req, res) => {
         if (logEntry.bodyFat === undefined) logEntry.bodyFat = latest.bodyFat;
         if (logEntry.calories === undefined) logEntry.calories = 2000; // Default goal
       }
+      if (logEntry.water === undefined) logEntry.water = 0;
       
       const newLog = await Log.create(logEntry);
       res.status(200).json({ message: 'Log recorded successfully', entry: newLog });

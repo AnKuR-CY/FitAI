@@ -127,7 +127,8 @@ const LogSchema = new mongoose.Schema({
   weight: Number,
   bodyFat: Number,
   calories: Number,
-  workoutDone: { type: Boolean, default: false }
+  workoutDone: { type: Boolean, default: false },
+  water: { type: Number, default: 0 }
 });
 
 // Ensure a user only has one log entry per date

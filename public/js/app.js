@@ -5,6 +5,9 @@ let currentDashboardTimeframe = 'week'; // 'week' or 'month'
 let scannedMealCalories = null; // Stored to add to dashboard
 let localFoodScans = [];
 let availableSlotsInterval = null;
+let todayWaterIntake = 0;
+const dailyWaterGoal = 2500;
+let speechEnabled = localStorage.getItem('fitai_speech_enabled') !== 'false';
 let liveWorkoutState = {
   active: false,
   dayTitle: '',
@@ -534,6 +537,9 @@ window.toggleBfGender = toggleBfGender;
 window.calculateBodyFat = calculateBodyFat;
 window.useCalculatedBodyFat = useCalculatedBodyFat;
 window.togglePasswordVisibility = togglePasswordVisibility;
+window.addWater = addWater;
+window.resetWater = resetWater;
+window.toggleTrackerSpeech = toggleTrackerSpeech;
 
 function initAuthForms() {
   const loginForm = document.getElementById('login-form');
@@ -1115,7 +1121,6 @@ function renderGeneratedRoutine(data) {
   });
 }
 
-// --- 7.5 LIVE EXERCISE TRACKER STATE & LOGIC ---
 function parseExDuration(repsText) {
   if (!repsText) return 90;
   const sMatch = repsText.match(/(\d+)s/i);
@@ -1154,6 +1159,7 @@ function startLiveWorkoutSession(workoutData) {
   }
   
   showToast(`Loaded ${workoutData.day}'s workout: ${workoutData.name}!`, 'info');
+  speakText(`Starting workout: ${workoutData.name}. First exercise is ${workoutData.exercises[0].name} for ${workoutData.exercises[0].sets} sets.`);
 }
 
 function formatTime(seconds) {
@@ -1185,12 +1191,17 @@ function renderTrackerUI() {
   const currentEx = liveWorkoutState.exercises[liveWorkoutState.currentIndex];
   
   let html = `
-    <div class="exercise-header">
+    <div class="exercise-header" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
       <span style="font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--text-primary);">${liveWorkoutState.dayTitle} — ${liveWorkoutState.workoutTitle}</span>
-      <span class="live-badge" style="background: ${liveWorkoutState.isPaused ? 'rgba(251,146,60,0.1)' : 'rgba(87,212,255,0.1)'}; color: ${liveWorkoutState.isPaused ? 'var(--accent-orange)' : 'var(--accent-blue)'}; border: 0.5px solid ${liveWorkoutState.isPaused ? 'rgba(251,146,60,0.2)' : 'rgba(87,212,255,0.2)'}; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-        <span class="live-dot" style="width:6px; height:6px; border-radius:50%; background: ${liveWorkoutState.isPaused ? 'var(--accent-orange)' : 'var(--accent-blue)'}; animation: ${liveWorkoutState.isPaused ? 'none' : 'pulse 1.5s infinite'};"></span>
-        ${liveWorkoutState.isPaused ? 'Paused' : 'Active'}
-      </span>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" id="tracker-speech-toggle" onclick="toggleTrackerSpeech()" style="background:transparent; border:none; color:var(--text-secondary); cursor:pointer; font-size:16px; display:inline-flex; align-items:center; justify-content:center; padding:4px; transition:var(--transition-fast);" title="Toggle Audio Coaching">
+          <i class="ti ${speechEnabled ? 'ti-volume' : 'ti-volume-off'}"></i>
+        </button>
+        <span class="live-badge" style="background: ${liveWorkoutState.isPaused ? 'rgba(251,146,60,0.1)' : 'rgba(87,212,255,0.1)'}; color: ${liveWorkoutState.isPaused ? 'var(--accent-orange)' : 'var(--accent-blue)'}; border: 0.5px solid ${liveWorkoutState.isPaused ? 'rgba(251,146,60,0.2)' : 'rgba(87,212,255,0.2)'}; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <span class="live-dot" style="width:6px; height:6px; border-radius:50%; background: ${liveWorkoutState.isPaused ? 'var(--accent-orange)' : 'var(--accent-blue)'}; animation: ${liveWorkoutState.isPaused ? 'none' : 'pulse 1.5s infinite'};"></span>
+          ${liveWorkoutState.isPaused ? 'Paused' : 'Active'}
+        </span>
+      </div>
     </div>
     
     <div class="live-timer-card">
@@ -1264,11 +1275,13 @@ function toggleTrackerTimer() {
   if (liveWorkoutState.isPaused) {
     liveWorkoutState.isPaused = false;
     liveWorkoutState.timerInterval = setInterval(tickTrackerTimer, 1000);
+    speakText("Resumed");
   } else {
     liveWorkoutState.isPaused = true;
     if (liveWorkoutState.timerInterval) {
       clearInterval(liveWorkoutState.timerInterval);
     }
+    speakText("Paused");
   }
   renderTrackerUI();
 }
@@ -1286,6 +1299,10 @@ function tickTrackerTimer() {
     } else {
       digits.classList.remove('warning-time');
     }
+  }
+  
+  if (liveWorkoutState.secondsLeft === 10) {
+    speakText("Ten seconds left.");
   }
   
   if (liveWorkoutState.secondsLeft <= 0) {
@@ -1310,6 +1327,9 @@ function advanceWorkoutExercise(userTriggered = false) {
     liveWorkoutState.secondsLeft = parseExDuration(nextEx.reps);
     liveWorkoutState.isPaused = false;
     liveWorkoutState.timerInterval = setInterval(tickTrackerTimer, 1000);
+    speakText(`Exercise complete. Next exercise is ${nextEx.name}.`);
+  } else {
+    speakText("Workout complete. Excellent job today!");
   }
   
   renderTrackerUI();
@@ -1708,6 +1728,11 @@ async function initDashboard() {
   document.getElementById('stat-workouts-done').textContent = stats.workoutsCompleted;
   document.getElementById('stat-total-workouts').textContent = ` / ${stats.totalWorkouts}`;
   document.getElementById('stat-streak').textContent = stats.streak;
+  
+  // Render today's water intake
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayLog = stats.logs.find(l => l.date === todayStr);
+  updateWaterUI(todayLog ? (todayLog.water || 0) : 0);
   
   // Render completion %
   const pct = stats.totalWorkouts ? Math.round((stats.workoutsCompleted / stats.totalWorkouts) * 100) : 0;
@@ -2345,3 +2370,107 @@ window.cancelPatientBooking = cancelPatientBooking;
 window.deleteDoctorSlot = deleteDoctorSlot;
 window.completeDoctorBooking = completeDoctorBooking;
 window.cancelDoctorBooking = cancelDoctorBooking;
+
+// --- 11. WATER INTAKE TRACKER LOGIC ---
+function updateWaterUI(currentMl) {
+  todayWaterIntake = currentMl;
+  const currentElem = document.getElementById('stat-water-current');
+  const liquidElem = document.getElementById('water-liquid-level');
+  
+  if (currentElem) {
+    currentElem.textContent = currentMl;
+  }
+  if (liquidElem) {
+    const percentage = Math.min(100, Math.round((currentMl / dailyWaterGoal) * 100));
+    liquidElem.style.height = `${percentage}%`;
+  }
+}
+
+async function addWater(amount) {
+  const newIntake = todayWaterIntake + amount;
+  const todayStr = new Date().toISOString().split('T')[0];
+  
+  updateWaterUI(newIntake);
+  
+  try {
+    const res = await authenticatedFetch('/api/dashboard/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date: todayStr,
+        water: newIntake
+      })
+    });
+    
+    if (!res) return;
+    if (!res.ok) throw new Error('Failed to save water intake.');
+    
+    showToast(`Hydration updated: +${amount}ml logged!`, 'success');
+    
+    // Refresh dashboard in background to sync charts if needed
+    fetchDashboardStats().then(stats => {
+      if (stats) {
+        // Redraw calorie charts if needed, but not required immediately
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    showToast(err.message, 'error');
+  }
+}
+
+async function resetWater() {
+  if (!confirm('Are you sure you want to reset today\'s water intake back to 0 ml?')) {
+    return;
+  }
+  const todayStr = new Date().toISOString().split('T')[0];
+  updateWaterUI(0);
+  
+  try {
+    const res = await authenticatedFetch('/api/dashboard/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date: todayStr,
+        water: 0
+      })
+    });
+    
+    if (!res) return;
+    if (!res.ok) throw new Error('Failed to reset water intake.');
+    
+    showToast('Water intake has been reset.', 'info');
+  } catch (err) {
+    console.error(err);
+    showToast(err.message, 'error');
+  }
+}
+
+// --- 12. TEXT TO SPEECH (AUDIO COACHING) LOGIC ---
+function speakText(text) {
+  if (speechEnabled && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function toggleTrackerSpeech() {
+  speechEnabled = !speechEnabled;
+  localStorage.setItem('fitai_speech_enabled', speechEnabled);
+  const btn = document.getElementById('tracker-speech-toggle');
+  if (btn) {
+    const icon = btn.querySelector('i');
+    if (icon) {
+      icon.className = speechEnabled ? 'ti ti-volume' : 'ti ti-volume-off';
+    }
+  }
+  showToast(speechEnabled ? 'Voice coaching enabled' : 'Voice coaching muted', 'info');
+  if (speechEnabled) {
+    speakText("Voice coaching active.");
+  } else {
+    window.speechSynthesis.cancel();
+  }
+}
